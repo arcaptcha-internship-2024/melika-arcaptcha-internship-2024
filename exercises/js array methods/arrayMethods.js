@@ -1,4 +1,6 @@
-numbers = [1,2,3,4,5,6,7,8,9,10]
+numbers1 = [1,2,3,4,5,6,7,8,9,10]
+numbers2 = [1,2,3,4,5]
+numbers3 = [1,2,3,4,5,6,7,8]
 
 function evenNumbers(numbers){
     evenNumbers = []
@@ -7,14 +9,41 @@ function evenNumbers(numbers){
             evenNumbers.push(numbers[i])
         }
     }
-    // console.log(evenNumbers)
     return evenNumbers
 }
+
 
 function square(numbers){
     let squaredNumbers = numbers.map(element => element * element)
     return squaredNumbers
 }
 
-document.getElementById("evenNumbers").innerHTML = '[' + evenNumbers(numbers) + ']'
-document.getElementById("squaredNumbers").innerHTML = '[' + square(numbers) + ']'
+
+function sum(numbers){
+    sum = 0
+    for(let i=0; i<numbers.length; i++){
+        sum += numbers[i]
+    }
+    return sum
+}
+
+
+function greaterThan(numbers, base){
+    firstNumberGreaterThanBase = 0
+    for(let i=0; i<numbers.length; i++){
+        if(numbers[i]>base){
+            firstNumberGreaterThanBase = numbers[i]
+            break
+        }
+    }
+    return firstNumberGreaterThanBase
+}
+
+
+function
+
+
+document.getElementById("evenNumbers").innerHTML = '[' + evenNumbers(numbers1) + ']'
+document.getElementById("squaredNumbers").innerHTML = '[' + square(numbers2) + ']'
+document.getElementById("ArrayElementSum").innerHTML = sum(numbers2)
+document.getElementById("greaterThanFive").innerHTML = greaterThan(numbers3,5)
