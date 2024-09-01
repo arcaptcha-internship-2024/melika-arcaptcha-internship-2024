@@ -60,8 +60,7 @@ function sum(numbers){
 
 
 function greaterThan(numbers, base){
-    let firstNumber = numbers.find(element => element>base)
-    return numbers.indexOf(firstNumber)
+    return numbers.findIndex(element => element>base)
 }
 
 
