@@ -5,13 +5,7 @@ mixedNumbers = [1,-2,3,4,-5]
 fruits = ['banana','apple','orange','mango']
 
 function evenNumbers(numbers){
-    evenNumbers = []
-    for(let i=0; i<numbers.length; i++){
-        if(numbers[i] % 2 == 0 ){
-            evenNumbers.push(numbers[i])
-        }
-    }
-    return evenNumbers
+    return numbers.filter(element => element%2 == 0)
 }
 
 
@@ -22,40 +16,43 @@ function square(numbers){
 
 
 function sum(numbers){
-    sum = 0
-    for(let i=0; i<numbers.length; i++){
-        sum += numbers[i]
-    }
-    return sum
+    return numbers.reduce((currentSum, currentElement) => (currentElement + currentSum),0)
 }
 
 
 function greaterThan(numbers, base){
-    firstNumberGreaterThanBase = []
-    for(let i=0; i<numbers.length; i++){
-        if(numbers[i]>base){
-            firstNumberGreaterThanBase.push(numbers[i])
-            break
-        }
-    }
-    return firstNumberGreaterThanBase
+    let firstNumber = numbers.find(element => element>base)
+    return numbers.indexOf(firstNumber)
 }
 
 
 function isNegative(numbers){
-    for(let i=0; i<numbers.length; i++){
-        if(numbers[i]<0){
-            return true
-        }
-    }
-    return false
+    return numbers.some(element => element<0)
 }
 
 
-document.getElementById("evenNumbers").innerHTML = '[' + evenNumbers(numbers1) + ']'
-document.getElementById("squaredNumbers").innerHTML = '[' + square(numbers2) + ']'
+function concatination(array1, array2){
+    return '[' + array1.concat(array2) + ']'
+}
+
+
+function arrayFormat(array){
+    return '[' + array + ']'
+}
+
+function removeElements(startingIndex, removalNumber,numbers){
+    numbers.splice(startingIndex,removalNumber)
+    return numbers
+}
+
+
+document.getElementById("evenNumbers").innerHTML = arrayFormat(evenNumbers(numbers1))
+document.getElementById("squaredNumbers").innerHTML = arrayFormat(square(numbers2))
 document.getElementById("ArrayElementSum").innerHTML = sum(numbers2)
 document.getElementById("greaterThanFive").innerHTML = greaterThan(numbers3,5)
 document.getElementById("isNegative").innerHTML = isNegative(mixedNumbers) ? 'There is Negative Number in this Array!': 'There is No Negative Number in this Array!'
 document.getElementById("allPositive").innerHTML = isNegative(numbers2) ?'There are Negative Elements in this Array':'All Elements in this Array are Positive!'
 document.getElementById("stringSort").innerHTML = fruits.sort()
+document.getElementById("concatination").innerHTML =concatination([1,2,3],[4,5,6])
+document.getElementById("firstThree").innerHTML = arrayFormat(numbers2.slice(0,3))
+document.getElementById("multipleRemove").innerHTML = arrayFormat(removeElements(1,2,numbers2))
