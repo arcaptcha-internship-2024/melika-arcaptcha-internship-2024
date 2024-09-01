@@ -4,6 +4,45 @@ numbers3 = [1,2,3,4,5,6,7,8]
 mixedNumbers = [1,-2,3,4,-5]
 fruits = ['banana','apple','orange','mango']
 
+const people = [
+    {
+        name: 'ali',
+        age: 50
+    },
+    {
+        name: 'nima',
+        age: 22
+    },
+    {
+        name: 'sara',
+        age: 34
+    },
+    {
+        name: 'mojan',
+        age: 12
+    },
+    {
+        name: 'ghazaleh',
+        age: 5
+    },
+    {
+        name: 'zahra',
+        age: 78
+    }
+
+]
+
+
+function midAge(people){
+    return people.reduce((totalAge,currentPerson) => (totalAge+currentPerson.age),0)/people.length
+}
+
+
+function olderPeople(people){
+    midAge = midAge(people)
+    return people.filter(person => person.age > midAge)
+}
+
 function evenNumbers(numbers){
     return numbers.filter(element => element%2 == 0)
 }
@@ -56,3 +95,5 @@ document.getElementById("stringSort").innerHTML = fruits.sort()
 document.getElementById("concatination").innerHTML =concatination([1,2,3],[4,5,6])
 document.getElementById("firstThree").innerHTML = arrayFormat(numbers2.slice(0,3))
 document.getElementById("multipleRemove").innerHTML = arrayFormat(removeElements(1,2,numbers2))
+
+console.log(olderPeople(people))
