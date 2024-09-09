@@ -1,21 +1,30 @@
 var http = require('http')
 
+let database = []
 function create(){
-    let userArray = []
+    let userArray = ['test']
+    database.push(userArray)
     return userArray
 }
+
+function read(){
+    return database[0]
+}
+
+
 
 var server = http.createServer(function(req, res){
     let url = req.url
     
     switch (url) {
         case '/create':
-            let array = create()
-            console.log("your array is created!!")
-            res.end(`[${array}]`)
+            let createdArray = create()
+            console.log("your array is created!!" + createdArray)
+            res.end("your array is created!!")
             break;
         case '/read':
-            res.end('you are in read page')
+            let readArray = read()
+            res.end(`this is your array : [${readArray}]`)
             break;
         case '/update':
             res.end('you are in update page')
