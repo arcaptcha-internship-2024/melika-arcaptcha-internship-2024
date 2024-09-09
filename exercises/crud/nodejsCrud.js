@@ -3,7 +3,7 @@ var http = require('http')
 let database = []
 
 function create(){
-    let userArray = ['test']
+    let userArray = []
     database.push(userArray)
     return userArray
 }
