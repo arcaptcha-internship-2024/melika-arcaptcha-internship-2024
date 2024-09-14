@@ -6,14 +6,24 @@ const readAll = (req,res) => {
 
 const read = (req,res) => {
     const {id} = req.params
-    console.log(`this is id: ${id}`)
-
     const requestedArray = database.find((item) => item.id == id)
-    console.log(requestedArray)
     res.send(requestedArray)
+}
+
+const create = (req,res) => {
+    const {name} = req.params
+    const newArray = {
+        id: database.length,
+        name,
+        content: []
+    }
+
+    database = [...database,newArray]
+    res.send(database)
 }
 
 module.exports = {
     readAll,
-    read
+    read,
+    create
   }

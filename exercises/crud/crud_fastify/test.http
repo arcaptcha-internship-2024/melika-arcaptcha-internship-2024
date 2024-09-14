@@ -3,3 +3,6 @@ GET http://localhost:3000/readAll HTTP/1.1
 
 ### GET Array By Name
 GET http://localhost:3000/read/1 HTTP/1.1
+
+### Create new Array
+GET http://localhost:3000/create/songs HTTP/1.1

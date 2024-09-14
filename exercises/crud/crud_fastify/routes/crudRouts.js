@@ -1,4 +1,4 @@
-const{readAll, read} = require('../controllers/crudOperations')
+const{readAll, read, create} = require('../controllers/crudOperations')
 
 
 const getAllArrays = {
@@ -9,6 +9,10 @@ const getArray = {
     handler: read
 }
 
+const createArray = {
+    handler: create
+}
+
 
 function crudRoutes(fastify,options,done){
     // Get all Arrays
@@ -16,6 +20,9 @@ function crudRoutes(fastify,options,done){
 
     // Get a single Array
     fastify.get('/read/:id', getArray)
+
+    // Create an Array
+    fastify.get('/create/:name', createArray)
     done()
 }
 
