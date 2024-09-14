@@ -6,8 +6,8 @@ const readAll = (req,res) => {
 
 const read = (req,res) => {
     const {id} = req.params
-    const requestedArray = database.find((item) => item.id == id)
-    res.send(requestedArray)
+    const arrayObj = database.find((item) => item.id == id)
+    res.send(arrayObj)
 }
 
 const create = (req,res) => {
@@ -22,8 +22,20 @@ const create = (req,res) => {
     res.send(database)
 }
 
+const add = (req,res) =>{
+    const {arrayName} = req.body
+    const {element} = req.body
+    const arrayObj = database.find((item) => item.arrayName == arrayName)
+    arrayObj.content.push(element)
+
+    
+    res.send(arrayObj)
+
+}
+
 module.exports = {
     readAll,
     read,
-    create
+    create,
+    add
   }

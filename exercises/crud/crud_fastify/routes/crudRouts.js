@@ -1,4 +1,4 @@
-const{readAll, read, create} = require('../controllers/crudOperations')
+const{readAll, read, create, add} = require('../controllers/crudOperations')
 
 
 const getAllArrays = {
@@ -13,6 +13,9 @@ const createArray = {
     handler: create
 }
 
+const addElement = {
+    handler: add
+}
 
 function crudRoutes(fastify,options,done){
     // Get all Arrays
@@ -23,6 +26,9 @@ function crudRoutes(fastify,options,done){
 
     // Create an Array
     fastify.get('/create/:name', createArray)
+
+    // Add an element to an array
+    fastify.post('/add', addElement)
     done()
 }
 
