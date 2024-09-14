@@ -22,20 +22,32 @@ const create = (req,res) => {
     res.send(database)
 }
 
-const add = (req,res) =>{
-    const {arrayName} = req.body
+const add = (req,res) => {
+    const {arrayName} = req.params
     const {element} = req.body
     const arrayObj = database.find((item) => item.arrayName == arrayName)
+    console.log(`this is the array object: ${arrayObj} \n`)
     arrayObj.content.push(element)
 
-    
     res.send(arrayObj)
+}
 
+const update = (req,res) => {
+    const {arrayName} = req.params
+    const {oldValue} = req.body
+    const {newValue} = req.body
+
+    const arrayObj = database.find((item) => item.arrayName == arrayName)
+    const index = arrayObj.content.indexOf(oldValue)
+    arrayObj.content[index] = newValue
+
+    res.send(arrayObj)
 }
 
 module.exports = {
     readAll,
     read,
     create,
-    add
+    add,
+    update
   }

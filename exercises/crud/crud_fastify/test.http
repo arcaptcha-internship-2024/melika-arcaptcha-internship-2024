@@ -8,10 +8,19 @@ GET http://localhost:3000/read/1 HTTP/1.1
 GET http://localhost:3000/create/songs HTTP/1.1
 
 ### Add Element to an array
-POST http://localhost:3000/add HTTP/1.1
+POST http://localhost:3000/add/fruits HTTP/1.1
 Content-Type: application/json
 
 {
-    "arrayName": "fruits",
     "element": "cherry"
+}
+
+
+### Update an element of an array
+PUT http://localhost:3000/update/people HTTP/1.1
+Content-Type: application/json
+
+{
+    "oldValue": "ali",
+    "newValue": "nima"
 }
