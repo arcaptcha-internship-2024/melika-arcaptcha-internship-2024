@@ -1,1 +1,5 @@
-GET http://localhost:3000/read HTTP/1.1
+### GET All Arrays
+GET http://localhost:3000/readAll HTTP/1.1
+
+### GET Array By Name
+GET http://localhost:3000/read/1 HTTP/1.1

@@ -1,7 +1,13 @@
 let database = [
     {
-        "name": "fruits",
-        "content": ['apple','banana']
+        id : 1,
+        arrayName: "fruits",
+        content: ['apple','banana']
+    },
+    {
+        id: 2,
+        arrayName: "people",
+        content: ['ali','maryam'] 
     }
 ]
 
