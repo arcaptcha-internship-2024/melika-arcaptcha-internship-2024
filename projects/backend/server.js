@@ -1,6 +1,15 @@
-const fastify = require('fastify')({logger:true});
+const fastify = require('fastify')({
+    logger:true,
+    bodyLimit: 100000
+});
+const path = require('path');
 fastify.register(require('./routes/routes'))
+fastify.register(require('@fastify/static'), {
+    root: path.join(__dirname, '../frontend'),
+    prefix: '/',
+  });
 
+fastify.register(require('@fastify/formbody'));
 
 const start = async () => {
     try {
@@ -11,3 +20,4 @@ const start = async () => {
     }
 }
 start()
+
