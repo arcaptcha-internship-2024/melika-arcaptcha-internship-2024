@@ -1,7 +1,8 @@
 const {saveUserData} = require('../controllers/operations')
 
 function routes(fastify,options,done){
-    fastify.post('/addUser',saveUserData)
+    fastify.register(require('@fastify/formbody'));
+    fastify.post('/upload',saveUserData)
     done()
 }
 
