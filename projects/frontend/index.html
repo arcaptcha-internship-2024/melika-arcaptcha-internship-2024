@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Your Details</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <form action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST">
+    <h1>Submit Your Details</h1>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" placeholder="Your full name" required>
+
+    <label for="companyName">Company Name:</label>
+    <input type="text" id="companyName" name="companyName" placeholder="Company you work for" required>
+
+    <label for="jobPosition">Job Position:</label>
+    <input type="text" id="jobPosition" name="jobPosition" placeholder="Your job position" required>
+
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Your phone number" required>
+
+    <label for="explanation">Explanation:</label>
+    <textarea id="explanation" name="explanation" rows="4" placeholder="Provide a short explanation" required></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+
+</body>
+
+<!-- <form action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST">
+  
+  <input type="text" name="firstName">
+
+  <input type="text" name="lastName">
+
+  Only for multipart/form-data
+
+    <input type="file" name="file">
+  
+  
+  <button type="submit">Submit</button>
+
+</form> -->
+<script>
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevent HTML submission
+    
+    // Create payload of type multipart/form-data (awlays of this type when using the FormData() constructor):
+    const fd = new FormData(form);
+
+    // Convert to URL-encoded string:
+    const urlEncoded = new URLSearchParams(fd).toString();
+    
+    fetch('http://localhost:3000/upload', {
+      method: "POST",
+      body: urlEncoded, // just 'fd' for multipart/form-data
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded'
+        // Content-type header should only be set if data is url-encoded! A FormData object will set the header as multipart/form-data automatically (and setting it manually may lead to an error)
+      }
+    })
+
+  })
+</script>  
+</html>
