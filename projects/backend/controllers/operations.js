@@ -12,7 +12,6 @@ const saveUserData = (req,res) => {
         explanation
     }
 
-
     let databaseArray = []
     const stringDatabase = fs.readFileSync(filePath,'utf-8')
     if(stringDatabase){
@@ -29,7 +28,7 @@ const saveUserData = (req,res) => {
             console.log('file successfully written!')
         }
     })
-    
+
     res.send(dataArrString)
 }
 
