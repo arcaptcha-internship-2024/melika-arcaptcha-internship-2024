@@ -4,11 +4,11 @@ const fastify = require('fastify')({
 });
 const path = require('path');
 fastify.register(require('./routes/routes'))
-fastify.register(require('@fastify/static'), {
-    root: path.join(__dirname, '../frontend'),
-    prefix: '/',
-    // origin: 'http://localhost:8080'
-  });
+// fastify.register(require('@fastify/static'), {
+//     root: path.join(__dirname, '../frontend'),
+//     prefix: '/',
+//     // origin: 'http://localhost:8080'
+//   });
 
 fastify.register(require('@fastify/formbody'));
 
