@@ -1,0 +1,81 @@
+Pull an image from DockerHub:
+    docker pull {imageName}:{tag}
+    (if we don't specify the tag of asked image, it automatically consider 'latest' tag for us)
+for example:
+    docker pull nginx:1.23
+
+when we use this command it automatically look for that image on DockerHub
+
+docker images:
+    this command displays all of our images that has been pulled
+
+how to run an image?
+    docker run {imageName}:{tag}
+for example:
+    docker run nginx:1.23
+
+docker ps:
+    this command displays all of our running containers.
+
+docker run -d {imageName}:{tag}:
+    in this case, the container is running but it's not blocking our terminal. -d or --detach cause this.
+    when you run this command it returns you the container id which is running.
+
+if you want to see the logs of running container:
+    docker logs {containerID}
+
+
+docker run {imageName}:{tag}:
+    You don't have to pull an image in order to run it, (you don't have to have the image locally to use 'docker run' command)
+    it first try to find the image locally and if it doesn't find it, it will go to DockerHub by default and pull the image from there
+
+docker stop {containerID}:
+    it will stop the running container by it's ID
+
+Port Binding:
+    any container runs on some port (nginx standard port: 80, redis:6379, MySQL:3306 )
+    these are the ports that containers are running on
+    but at first they all are on docker network so we can't access them from localhost
+    (localhost:80 doesn't give us access to nginx)
+
+in order to have access to a container from our localhost we must tell docker to expose that container on some port:
+    docker run -d -p {host_PORT}:{container_PORT} {imageName}:{tag}
+for example:
+    docker run -d -p 9000:80 nginx:1.23
+    now nginx:1.23 is exposed and accessible on port 9000 on local network or localhost
+(-p or --publish: publish a container's port to the host)
+Standard to use the same port on your host as container is using
+
+
+everytime we use docker run it creates a new container for us.
+we can see all stopped and running containers using this command:
+    docker ps -a (-a or -all)
+
+we can restart our stopped containers without creating them again by using:
+    docker start {containerID}
+
+we can start as many containers as we want using this command.
+
+
+when we use 'docker run' command it automatically generates a name for the created container.
+we can use "--name" flag to choose some meaningful name for our container:
+    docker run --name melikaNginx -d -p 9000:80 nginx:latest
+by choosing a meaningful name for our containers we can access them using their name instead of the containerID, which is hard to remember.
+
+
+
+Private Docker Registries
+    dockerHub is the largest "public Registry" which means anyone can search and download Docker images
+    but in Private docker Registries you need to authenticate before accessing the images
+
+
+Registry VS Repository
+    Registries are much larger than Repositories and they can contain Repositories (an example of Registry: AWS ECR)
+    in Registries you can create separate Repositories for different images 
+    in each Repository you can add different version of an image (each application gets it's own Repository)
+
+
+DockerFile:
+
+
+
