@@ -1,14 +1,14 @@
 version: '3'
 services:
   my-form:
-    image: my_frontend
+    build: ./frontend
     ports:
       - "8080:80"
     depends_on:
       - my-server
 
   my-server:
-    image: my_backend
+    build: ./backend
     volumes:
       - ./backend/database/user.json:/app/database/user.json
     ports:
