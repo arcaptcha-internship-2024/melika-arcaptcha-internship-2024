@@ -1,17 +1,8 @@
 // const database = require('../database/user.json')
 const fs = require('fs')
 
-const saveUserData = (req,res) => {
-    const {name, companyName, jobPosition, phoneNumber, explanation} = req.body
+function writeToFile(userData){
     const filePath = './database/user.json'
-    const userData = {
-        name,
-        companyName,
-        jobPosition,
-        phoneNumber,
-        explanation
-    }
-
     let databaseArray = []
     const stringDatabase = fs.readFileSync(filePath,'utf-8')
     if(stringDatabase){
@@ -28,7 +19,18 @@ const saveUserData = (req,res) => {
             console.log('file successfully written!')
         }
     })
-
+}
+const saveUserData = (req,res) => {
+    const {name, companyName, jobPosition, phoneNumber, explanation} = req.body
+    
+    const userData = {
+        name,
+        companyName,
+        jobPosition,
+        phoneNumber,
+        explanation
+    }
+    writeToFile(userData)
     res.send(dataArrString)
 }
 
