@@ -19,6 +19,7 @@ function writeToFile(userData){
             console.log('file successfully written!')
         }
     })
+    return dataArrString
 }
 const saveUserData = (req,res) => {
     const {name, companyName, jobPosition, phoneNumber, explanation} = req.body
@@ -30,7 +31,7 @@ const saveUserData = (req,res) => {
         phoneNumber,
         explanation
     }
-    writeToFile(userData)
+    const dataArrString = writeToFile(userData)
     res.send(dataArrString)
 }
 
