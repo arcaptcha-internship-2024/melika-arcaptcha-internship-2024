@@ -18,6 +18,7 @@ Node.js is event-driven and heavily uses asynchronous functions to avoid blockin
 
 ## Different approaches to handle async functions results:
 1. Callback:
+```javascript
 const fs = require('fs');
 
 // Reading a file asynchronously
@@ -33,6 +34,7 @@ fs.readFile('file.txt', 'utf8', (err, data) => {
 console.log("File reading initiated!");
 
 2. Promises:
+```javascript
 const fs = require('fs').promises;
 
 // Reading a file asynchronously using Promises
@@ -48,8 +50,9 @@ fs.readFile('file.txt', 'utf8')
 console.log("File reading initiated!");
 
 3. Async/await:
-const fs = require('fs').promises;
 ```javaScript
+const fs = require('fs').promises;
+
 // Reading a file asynchronously using Promises
 fs.readFile('file.txt', 'utf8')
   .then(data => {
