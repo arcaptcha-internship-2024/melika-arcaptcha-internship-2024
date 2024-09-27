@@ -49,7 +49,7 @@ console.log("File reading initiated!");
 
 3. Async/await:
 const fs = require('fs').promises;
-
+```javaScript
 // Reading a file asynchronously using Promises
 fs.readFile('file.txt', 'utf8')
   .then(data => {
