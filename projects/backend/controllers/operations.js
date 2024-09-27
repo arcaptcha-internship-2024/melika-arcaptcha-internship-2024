@@ -14,7 +14,8 @@ async function writeToFile(userData){
     }
     
     databaseArray.push(userData)
-    const dataArrString = JSON.stringify(databaseArray)
+    //adding null and 2 makes the json file more readable
+    const dataArrString = JSON.stringify(databaseArray,null,2)
 
     try {
         await fs.writeFile(filePath,dataArrString)
