@@ -65,7 +65,7 @@ fs.readFile('file.txt', 'utf8')
 // This line runs immediately
 console.log("File reading initiated!");
 ```
-###Async and Await:
+### Async and Await:
 async functions return a promise. if you have a code block which is depend on the result of an async function,
 you can use await keyword instead of writing the needed function as a sync fucntion. await keyword waits for a promise to resolve before moving on to the next line of code. When you await a promise, JavaScript pauses execution inside that async function until the promise is resolved (or rejected), and then it proceeds.
 
