@@ -32,7 +32,7 @@ fs.readFile('file.txt', 'utf8', (err, data) => {
 
 // This line runs immediately, even before the file is read
 console.log("File reading initiated!");
-
+```
 2. Promises:
 ```javascript
 const fs = require('fs').promises;
@@ -48,7 +48,7 @@ fs.readFile('file.txt', 'utf8')
 
 // This line runs immediately
 console.log("File reading initiated!");
-
+```
 3. Async/await:
 ```javaScript
 const fs = require('fs').promises;
