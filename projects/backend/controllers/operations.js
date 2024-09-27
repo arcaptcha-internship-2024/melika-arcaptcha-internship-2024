@@ -1,27 +1,31 @@
 // const database = require('../database/user.json')
-const fs = require('fs')
+const fs = require('fs').promises
 
-function writeToFile(userData){
+async function writeToFile(userData){
     const filePath = './database/user.json'
     let databaseArray = []
-    const stringDatabase = fs.readFileSync(filePath,'utf-8')
-    if(stringDatabase){
-        databaseArray = JSON.parse(stringDatabase)
+    try {
+        const stringDatabase = await fs.readFile(filePath,'utf-8')
+        if(stringDatabase){
+            databaseArray = JSON.parse(stringDatabase)
+        } 
+    } catch (err) {
+        console.log(`file doesn't exist!`)
     }
+    
     databaseArray.push(userData)
-
     const dataArrString = JSON.stringify(databaseArray)
-    fs.writeFile(filePath,dataArrString,err=>{
-        if(err){
-            console.log(err)
-        }
-        else{
-            console.log('file successfully written!')
-        }
-    })
+
+    try {
+        await fs.writeFile(filePath,dataArrString)
+        console.log('file successfully written!')
+    } catch (err) {
+        console.log(err)
+    }
+    
     return dataArrString
 }
-const saveUserData = (req,res) => {
+const saveUserData = async(req,res) => {
     const {name, companyName, jobPosition, phoneNumber, explanation} = req.body
     
     const userData = {
@@ -31,7 +35,7 @@ const saveUserData = (req,res) => {
         phoneNumber,
         explanation
     }
-    const dataArrString = writeToFile(userData)
+    const dataArrString = await writeToFile(userData)
     res.send(dataArrString)
 }
 
