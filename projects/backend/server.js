@@ -8,9 +8,10 @@ fastify.register(require('./routes/routes'))
 //     root: path.join(__dirname, '../frontend'),
 //     prefix: '/',
 //     // origin: 'http://localhost:8080'
-//   });
+// });
 fastify.register(require('@fastify/cors'), {
   origin: 'http://localhost:8080'
+  // origin: '*'
 });
 
 fastify.register(require('@fastify/formbody'));
