@@ -1,5 +1,6 @@
 // const database = require('../database/user.json')
 const fs = require('fs').promises
+const axios = require('axios');
 
 async function writeToFile(userData){
     const filePath = './database/user.json'
@@ -27,17 +28,31 @@ async function writeToFile(userData){
     return dataArrString
 }
 const saveUserData = async(req,res) => {
-    const {name, companyName, jobPosition, phoneNumber, explanation} = req.body
+    // console.log("Request Body:", req.body);
+    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
+    const arcaptcha_api = "https://api.arcaptcha.co/arcaptcha/api/verify";
+    const result = await axios.post(arcaptcha_api, {
+        challenge_id: arcaptcha_token,
+        site_key: "qh7aotm3n8",
+        secret_key: "2orcx4w6tdv91a8uuzdj",
+      });
+
+    //   console.log(result.data)
+      if (result.data.success) {
+        const userData = {
+            name,
+            companyName,
+            jobPosition,
+            phoneNumber,
+            explanation
+        }
+        const dataArrString = await writeToFile(userData)
+        res.send(dataArrString)
+      } else {
+        console.log('You must prove that you are not a robot!')
+      }
     
-    const userData = {
-        name,
-        companyName,
-        jobPosition,
-        phoneNumber,
-        explanation
-    }
-    const dataArrString = await writeToFile(userData)
-    res.send(dataArrString)
+    
 }
 
 module.exports = {saveUserData}
