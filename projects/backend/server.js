@@ -10,8 +10,8 @@ fastify.register(require('./routes/routes'))
 //     // origin: 'http://localhost:8080'
 // });
 fastify.register(require('@fastify/cors'), {
-  origin: 'http://localhost:8080'
-  // origin: '*'
+  // origin: 'http://localhost:8080'
+  origin: '*'
 });
 
 fastify.register(require('@fastify/formbody'));
