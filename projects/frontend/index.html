@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit Your Details</title>
   <link rel="stylesheet" href="./style.css">
+  <script src="https://widget.arcaptcha.ir/1/api.js" async defer></script>
 </head>
 <body>
   <form action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST">
-    <h1>Submit Your Details</h1>
+    <h1>Submit Your Detailszzzzzz</h1>
 
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" placeholder="Your full name" required>
@@ -24,36 +25,19 @@
 
     <label for="explanation">Explanation:</label>
     <textarea id="explanation" name="explanation" rows="4" placeholder="Provide a short explanation" required></textarea>
-
+    <div class="arcaptcha" data-site-key="qh7aotm3n8"></div>
+    
     <button type="submit">Submit</button>
   </form>
 
 </body>
 
-<!-- <form action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST">
-  
-  <input type="text" name="firstName">
-
-  <input type="text" name="lastName">
-
-  Only for multipart/form-data
-
-    <input type="file" name="file">
-  
-  
-  <button type="submit">Submit</button>
-
-</form> -->
 <script>
   const form = document.querySelector('form');
 
   form.addEventListener('submit', (e) => {
     e.preventDefault(); // Prevent HTML submission
-    
-    // Create payload of type multipart/form-data (awlays of this type when using the FormData() constructor):
     const fd = new FormData(form);
-
-    // Convert to URL-encoded string:
     const urlEncoded = new URLSearchParams(fd).toString();
     
     fetch('http://localhost:3000/upload', {
@@ -61,10 +45,8 @@
       body: urlEncoded, // just 'fd' for multipart/form-data
       headers: {
         'Content-type': 'application/x-www-form-urlencoded'
-        // Content-type header should only be set if data is url-encoded! A FormData object will set the header as multipart/form-data automatically (and setting it manually may lead to an error)
       }
     })
-
   })
 </script>  
 </html>
