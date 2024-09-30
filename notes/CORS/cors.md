@@ -1,4 +1,4 @@
-### What is CORS?
+# What is CORS?
 CORS (Cross-Origin Resource Sharing) is a security feature implemented in web browsers to control how web pages can request resources from a domain different from the one that served the web page.  
 It is a security mechanism used to prevent unauthorized requests to APIs or other web resources from different domains.
 
