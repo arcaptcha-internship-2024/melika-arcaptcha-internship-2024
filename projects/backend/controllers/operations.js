@@ -47,9 +47,10 @@ const saveUserData = async(req,res) => {
             explanation
         }
         const dataArrString = await writeToFile(userData)
-        res.send(dataArrString)
+        res.send({success: true, message: 'Your form successfully submited!'})
       } else {
-        console.log('You must prove that you are not a robot!')
+        res.send({success: false, message:'Verify You Are Human'})
+        console.log('form submission failed')
       }
     
     
