@@ -8,7 +8,7 @@
   <script src="https://widget.arcaptcha.ir/1/api.js" async defer></script>
 </head>
 <body>
-  <form action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST">
+  <form id="myForm" action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST">
     <h1>Submit Your Details</h1>
 
     <label for="name">Name:</label>
@@ -46,7 +46,17 @@
       headers: {
         'Content-type': 'application/x-www-form-urlencoded'
       }
-    })
+    }).then(response => response.json()).then(
+      data => {
+        if(data.success){
+          alert(data.message)
+          document.getElementById("myForm").reset()
+          window.arcaptcha.reset()
+        }else{
+          alert(data.message)
+        }
+      }
+    )
   })
 </script>  
 </html>
