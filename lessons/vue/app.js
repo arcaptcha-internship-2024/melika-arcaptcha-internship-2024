@@ -6,6 +6,13 @@ const app = Vue.createApp(
                 author: 'Brandon Sanderson',
                 age: 45
             }
+        },
+        methods:{
+            changeTitle(title){
+                // this.title = 'Words of Randiance'
+                this.title = title
+
+            }
         }
     }
 )
