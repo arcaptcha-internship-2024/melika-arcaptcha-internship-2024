@@ -1,8 +1,9 @@
 <template>
   <h1>{{title}}</h1>
-  <input type="text" ref="name">
-  <button @click="handleClick">Click</button>
-  <Modal :header="header" :text="text" theme="saleaa"/>
+  <button @click="toggleModal">Show Modal</button>
+  <div v-if="showModal">
+    <Modal :header="header" :text="text" theme="sale" @close="toggleModal"/>
+  </div>
 </template>
 
 <script>
@@ -13,17 +14,16 @@ export default {
     return{
       title: 'My First Vue App :)',
       header: 'Header From Parent Component!',
-      text: 'this is a text from parent component!!'
+      text: 'this is a text from parent component!!',
+      showModal: false
     }
   },
   components:{
     Modal
   },
   methods:{
-    handleClick(){
-      console.log(this.$refs.name)
-      this.$refs.name.classList.add('active')
-      this.$refs.name.focus()
+    toggleModal(){
+      this.showModal = !this.showModal
     }
   }
 }
