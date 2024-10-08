@@ -2,7 +2,7 @@
   <h1>{{title}}</h1>
   <button @click.shift="toggleModal">Show Modal</button>
   <button @click="toggleModalTwo">Show Modal Two</button>
-  <div v-if="showModal">
+  <teleport to=".modals" v-if="showModal">
     <Modal theme="salew" @close="toggleModal">
       <h1>{{header}}</h1>
       <p>{{text}}</p>
@@ -12,13 +12,13 @@
         <a href="#">More Info</a>
       </template>
     </Modal>
-  </div>
-  <div v-if="showModalTwo">
+  </teleport>
+  <teleport to=".modals" v-if="showModalTwo">
     <Modal theme="sale" @close="toggleModalTwo">
       <h1>This is a new Modal!!</h1>
       <p>This is a new Text! Can you Believe it?!</p>
     </Modal>
-  </div>
+  </teleport>
 </template>
 
 <script>
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style>
-#app {
+#app, .modals {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
