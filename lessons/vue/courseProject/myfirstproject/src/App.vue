@@ -3,8 +3,8 @@
   <button @click.shift="toggleModal">Show Modal</button>
   <div v-if="showModal">
     <Modal theme="salew" @close="toggleModal">
-      <h1>{{header}}</h1>
-      <p>{{text}}</p>
+      <!-- <h1>{{header}}</h1>
+      <p>{{text}}</p> -->
 
       <template v-slot:links>
         <a href="#">Sign up</a>

@@ -1,7 +1,7 @@
 <template>
     <div class="backdrop" @click.self="closeModal">
         <div class="modal" :class="{sale: theme === 'sale'}">
-            <slot></slot>
+            <slot>Default Content!</slot>
             <div class="actions">
                 <slot name="links"></slot>
             </div>
