@@ -1,6 +1,6 @@
 <template>
   <h1>{{title}}</h1>
-  <button @click="toggleModal">Show Modal</button>
+  <button @click.shift="toggleModal">Show Modal</button>
   <div v-if="showModal">
     <Modal :header="header" :text="text" theme="sale" @close="toggleModal"/>
   </div>
