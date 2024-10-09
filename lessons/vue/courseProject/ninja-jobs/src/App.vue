@@ -7,9 +7,9 @@
     </nav>
     
     <router-view/>
-    <button @click="back">Go Back</button>
+    <!-- <button @click="back">Go Back</button>
     <button @click="redirect">Redirect</button>
-    <button @click="forward">Go Forward</button>
+    <button @click="forward">Go Forward</button> -->
   </div>
 </template>
 
