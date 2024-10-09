@@ -16,11 +16,25 @@
             <input type="checkbox" v-model="terms" required>
             <label>Accept terms and conditions</label>
         </div>
+
+        <div>
+            <input type="checkbox" value="melika" v-model="names">
+            <label>Melika</label>
+        </div>
+        <div>
+            <input type="checkbox" value="nima" v-model="names">
+            <label>Nima</label>
+        </div>
+        <div>
+            <input type="checkbox" value="rojin" v-model="names">
+            <label>Rojin</label>
+        </div>
     </form>
     <p>Email: {{email}}</p>
     <p>Password: {{password}}</p>
     <p>Role: {{role}}</p>
     <p>Terms Accepted: {{terms}}</p>
+    <p>Names: {{names}}</p>
   </div>
 </template>
 
@@ -31,7 +45,8 @@ export default {
             email:'melika',
             password:'1234',
             role: 'designer',
-            terms: false
+            terms: false,
+            names: []
         }
     }
 }
