@@ -12,10 +12,15 @@
             <option value="developer">Web Developer</option>
             <option value="designer">Web Designer</option>
         </select>
+        <div>
+            <input type="checkbox" v-model="terms" required>
+            <label>Accept terms and conditions</label>
+        </div>
     </form>
     <p>Email: {{email}}</p>
     <p>Password: {{password}}</p>
     <p>Role: {{role}}</p>
+    <p>Terms Accepted: {{terms}}</p>
   </div>
 </template>
 
@@ -25,7 +30,8 @@ export default {
         return{
             email:'melika',
             password:'1234',
-            role: 'designer'
+            role: 'designer',
+            terms: false
         }
     }
 }
@@ -57,5 +63,12 @@ input, select{
     border: none;
     border-bottom: 1px solid #ddd;
     color: #555;
+}
+input[type="checkbox"]{
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    width: 16px;
+    margin: 0 10px 0 0;
 }
 </style>
