@@ -1,8 +1,10 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-    <p ref="p">My name is {{name}} and I'm {{age}} years old!</p>
+    <p>My name is {{name}} and I'm {{age}} years old!</p>
     <button @click="handleClick">Click me</button>
+    <input type="text" v-model="name">
+    <button @click="age++">Increase Age</button>
   </div>
 </template>
 
@@ -11,17 +13,14 @@ import {ref} from 'vue'
 export default {
   name: 'HomeView',
   setup(){
-    let age = 23
-    let name = 'Melika'
-    let p = ref(null)
+    const age = ref(23)
+    const name = ref('Melika')
 
     const handleClick = () => {
-      console.log('You clicked me!')
-      console.log(p.value)
-      p.value.classList.add('test')
-      p.value.textContent = 'Hello Melika!!'
+      name.value = 'Nima'
+      age.value = 21
     }
-    return{age, name, handleClick, p}
+    return{age, name, handleClick}
   }
 }
 </script>
