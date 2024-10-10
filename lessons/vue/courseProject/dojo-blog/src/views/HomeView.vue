@@ -1,34 +1,25 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-    <h2>Refs</h2>
-    <p>My name is {{ninjaOne.name}} and I'm {{ninjaOne.age}} years old!</p>
-    <button @click="updateNinjaOne">Update Ninja one</button>
-    
-    <h2>Reactive</h2>
-    <p>{{ninjaTwo.name}} - {{ninjaTwo.age}}</p>
-    <button @click="updateNinjaTwo">Update Ninja two</button>
+    <input type="text" v-model="search">
+    <p>search term: {{search}}</p>
+    <div v-for="name in matchedNames" :key="name">
+      {{name}}
+    </div>
   </div>
 </template>
 
 <script>
-import {reactive, ref} from 'vue'
+import {computed, reactive, ref} from 'vue'
 export default {
   name: 'HomeView',
   setup(){
-    const ninjaOne = ref({name: 'Melika', age: 23})
-    const ninjaTwo = reactive({name: 'Nima', age: 21})
-
-    //this is a primitive value and you can't change it  it's better to use refs all the time
-    const name = reactive('Rojin')
-
-    const updateNinjaOne = () => {
-      ninjaOne.value.age += 10
-    }
-    const updateNinjaTwo = () => {
-      ninjaTwo.age += 10
-    }
-    return{ninjaOne, updateNinjaOne, updateNinjaTwo, ninjaTwo}
+    const search = ref('')
+    const names = ref(['melika','nima','rojin','maryam','ali','fatemeh','mojan','sara'])
+    const matchedNames = computed(() => {
+      return names.value.filter((name) => name.includes(search.value))
+    })
+    return{search,names,matchedNames}
   }
 }
 </script>
