@@ -1,9 +1,13 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-    <PostList :posts="posts" v-if="showPosts"/>
-    <button @click="showPosts = !showPosts">Toggle Posts</button>
-    <button @click="posts.pop()">Delete a Post</button>
+    <div v-if="error">{{error}}</div>
+    <div v-if="posts.length">
+      <PostList :posts="posts"/>
+    </div>
+    <div v-else>
+      Loading...
+    </div>
   </div>
 </template>
 
@@ -16,11 +20,22 @@ export default {
   components: {PostList},
   setup(){
     const showPosts = ref(true)
-    const posts = ref([
-      {title: 'Welcome to the Blog', id: 1, body:'Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum'},
-      {title: 'Top 5 CSS tips', id: 2, body:'Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum'},
-    ])
-    return{posts,showPosts}
+    const posts = ref([])
+    const error = ref(null)
+
+    const loadData = async () => {
+      try {
+        let data = await fetch('http://localhost:3000/posts')
+        if(!data.ok){
+          throw Error('No data available')
+        }
+        posts.value = await data.json()
+      } catch (err) {
+        error.value = err.message
+      }
+    }
+    loadData()
+    return{posts,showPosts,error}
   }
 }
 </script>
