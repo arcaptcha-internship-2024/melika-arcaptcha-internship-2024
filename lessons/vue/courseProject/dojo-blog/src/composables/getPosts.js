@@ -5,13 +5,13 @@ const getPosts = () => {
 
     const loadData = async () => {
         try {
-        let data = await fetch('http://localhost:3000/posts')
-        if(!data.ok){
-            throw Error('No data available')
-        }
-        posts.value = await data.json()
+            let data = await fetch('http://localhost:3000/posts')
+            if(!data.ok){
+                throw Error('No data available')
+            }
+            posts.value = await data.json()
         } catch (err) {
-        error.value = err.message
+            error.value = err.message
         }
     }
     return{posts,error,loadData}
