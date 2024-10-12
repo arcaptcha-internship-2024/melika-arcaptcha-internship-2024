@@ -13,29 +13,16 @@
 
 <script>
 import PostList from "../components/PostList.vue"
+import getPosts from '../composables/getPosts'
 import {computed, reactive, ref, watch, watchEffect} from 'vue'
 
 export default {
   name: 'HomeView',
   components: {PostList},
   setup(){
-    const showPosts = ref(true)
-    const posts = ref([])
-    const error = ref(null)
-
-    const loadData = async () => {
-      try {
-        let data = await fetch('http://localhost:3000/posts')
-        if(!data.ok){
-          throw Error('No data available')
-        }
-        posts.value = await data.json()
-      } catch (err) {
-        error.value = err.message
-      }
-    }
+    const{posts, error, loadData} = getPosts()
     loadData()
-    return{posts,showPosts,error}
+    return{posts,error}
   }
 }
 </script>
