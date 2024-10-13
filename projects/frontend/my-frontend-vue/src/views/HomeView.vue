@@ -1,4 +1,7 @@
 <template>
+  <nav>
+    <button class="login-button">login</button>
+  </nav>
   <div class="home">
     <MyForm />
   </div>
@@ -23,5 +26,11 @@ export default {
   display: flex;
   justify-content: center;
 }
+nav{
+  display: flex;
 
+}
+.login-button{
+  width: 10%;
+}
 </style>

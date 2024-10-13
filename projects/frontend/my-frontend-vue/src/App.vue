@@ -1,7 +1,4 @@
 <template>
-  <!-- <nav>
-    <button class="login-button">login</button>
-  </nav> -->
   <router-view/>
 </template>
 
@@ -13,11 +10,5 @@
   text-align: center;
   color: #2c3e50;
 }
-/* nav{
-  display: flex;
 
-}
-.login-button{
-  width: 10%;
-} */
 </style>
