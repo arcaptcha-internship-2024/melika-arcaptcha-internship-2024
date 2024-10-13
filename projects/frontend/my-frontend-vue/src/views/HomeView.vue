@@ -20,7 +20,7 @@ export default {
 <style >
 .home{
   width: 100%;
-  display: ruby;
+  display: flex;
   justify-content: center;
 }
 

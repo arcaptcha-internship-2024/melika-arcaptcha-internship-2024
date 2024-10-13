@@ -1,7 +1,14 @@
 <template>
   <div class="input-group">
     <label :for="id">{{label}}</label>
-    <input :type="type" :id="id" :name="id" :placeholder="placeholder" :required="isRequired">
+    <div v-if="fieldType === 'input'">
+      <input :type="type" :id="id" :name="id" :placeholder="placeholder" :required="isRequired">
+    </div>
+    <div v-else>
+      <textarea :name="id" :id="id" :rows="rows" :placeholder="placeholder"></textarea>
+    </div>
+   
+    
   </div>
 </template>
 
@@ -10,9 +17,11 @@ export default {
   props:[
     'id',
     'type',
+    'rows',
     'placeholder',
     'label',
-    'isRequired'
+    'isRequired',
+    'fieldType'
   ]
 }
 </script>

@@ -2,19 +2,15 @@
   <form id="myForm" action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST" @submit.prevent="handleSubmit">
     <h1>Submit Your Details</h1>
     <div v-for="formField in formFields" :key="formField.id">
-      <InputGroup :id="formField.id" :type="formField.type" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired"/>
+      <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType"/>
     </div>
-    <label for="explanation">Explanation:</label>
-    <textarea id="explanation" name="explanation" rows="4" placeholder="Provide a short explanation" required></textarea>
-    <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8">
-    </arcaptchaVue3>
-
+    <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8"></arcaptchaVue3>
     <button type="submit">Submit</button>
   </form>
 </template>
 
 <script>
-import arcaptchaVue3, { data } from "arcaptcha-vue3";
+import arcaptchaVue3, { data } from 'arcaptcha-vue3';
 import {ref} from 'vue'
 import InputGroup from './InputGroup.vue'
 export default {
@@ -25,10 +21,11 @@ export default {
   setup(){
     const widget = ref(null)
     const formFields = [
-      {id: "name", type: "text", placeholder: "Your full name", label: "Name: ", isRequired: true},
-      {id: "companyName", type: "text", placeholder: "Company you work for", label: "Company Name: ", isRequired: true},
-      {id: "jobPosition", type: "text", placeholder: "Your job position", label: "Job Position: ", isRequired: true},
-      {id: "phoneNumber", type: "tel", placeholder: "Your phone number", label: "Phone Number: ", isRequired: true}
+      {id: "name", type: "text", rows: "", placeholder: "Your full name", label: "Name: ", isRequired: true, fieldType:"input"},
+      {id: "companyName", type: "text", rows: "", placeholder: "Company you work for", label: "Company Name: ", isRequired: true, fieldType:"input"},
+      {id: "jobPosition", type: "text", rows: "", placeholder: "Your job position", label: "Job Position: ", isRequired: true, fieldType:"input"},
+      {id: "phoneNumber", type: "tel", rows: "", placeholder: "Your phone number", label: "Phone Number: ", isRequired: true, fieldType:"input"},
+      {id: "explanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Explanation: ", isRequired: true, fieldType:"textarea"}
     ]
     
     const handleSubmit = async () => {
