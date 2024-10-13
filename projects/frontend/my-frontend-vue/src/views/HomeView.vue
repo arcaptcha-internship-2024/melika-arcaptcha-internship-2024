@@ -18,5 +18,10 @@ export default {
 </script>
 
 <style >
+.home{
+  width: 100%;
+  display: ruby;
+  justify-content: center;
+}
 
 </style>
