@@ -1,6 +1,6 @@
 <template>
     <div class="login-page">
-        <MyForm :formFields="loginFields" class="login-form" :buttonContent="buttonContent" :headerContent="headerContent"/>
+        <MyForm :formFields="loginFields" class="login-form" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :selectInfo="selectInfo"/>
     </div>
   
 </template>
@@ -19,7 +19,17 @@ export default {
         ]
         const headerContent = "Login to Your Account"
         const buttonContent = "Login"
-        return {loginFields, headerContent, buttonContent}
+        const multiRole = true
+        const selectInfo = {
+            id:"role",
+            label: "Select Role: ",
+            options: [
+                {value: "default",content: "Select Role", isDisabled: true},
+                {value: "admin",content: "Admin", isDisabled: false},
+                {value: "sales_manager",content: "Sales Manager", isDisabled: false}
+            ]
+        }
+        return {loginFields, headerContent, buttonContent, multiRole, selectInfo}
     }
 }
 </script>
