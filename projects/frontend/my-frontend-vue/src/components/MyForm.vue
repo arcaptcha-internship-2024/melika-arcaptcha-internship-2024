@@ -1,26 +1,38 @@
 <template>
   <form id="myForm" action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST" @submit.prevent="handleSubmit">
     <h1>{{headerContent}}</h1>
-    <div v-for="formField in formFields" :key="formField.id">
+
+    <div v-if="multiRole">
+      <label :for="selectInfo.id">{{ selectInfo.label }}</label>
+      <select v-model="role" :id="selectInfo.id">
+        <option v-for="option in selectInfo.options" :key="option.value" :value="option.value">{{option.content}}</option>
+      </select>
+    </div>
+
+    <div v-for="formField in formFields" :key="formField.id" class="form-field">
       <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType"/>
     </div>
+
     <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8"></arcaptchaVue3>
+
     <button type="submit">{{buttonContent}}</button>
   </form>
 </template>
 
 <script>
 import arcaptchaVue3, { data } from 'arcaptcha-vue3';
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 import InputGroup from './InputGroup.vue'
 export default {
   components: {
     InputGroup,
     arcaptchaVue3
   },
-  props:['formFields', 'buttonContent', 'headerContent'],
+  props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo'],
   setup(){
     const widget = ref(null)
+    const role = ref('default')
+
     const handleSubmit = async () => {
       const form = document.querySelector('form')
       const formData = new FormData(form);
@@ -44,15 +56,7 @@ export default {
         }
       )
     }
-    return{handleSubmit, widget}
-  },
-  methods: {
-    expired_callbackDef() {
-        //This method would be called after expiring
-    },
-    callbackDef() {
-        // This method would be called after solving captcha
-    }
+    return{handleSubmit, widget, role}
   }
 }
 </script>
@@ -88,6 +92,9 @@ button {
 }
 button:hover {
   background-color: #6242db;
+}
+.form-field{
+  width: 100%;
 }
 </style>
 
