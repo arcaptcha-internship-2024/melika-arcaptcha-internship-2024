@@ -36,16 +36,20 @@ label {
   text-align: left;
   margin-left: 5px;
 }
-input, textarea{
-  width: 95%;
+input, textarea, select{
+  width: 97.5%;
   padding: 12px;
+  padding-right: 0;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
   margin-bottom: 20px;
   transition: border-color 0.3s ease;
 }
-input:focus, textarea:focus{
+select{
+  width: 100%;
+}
+input:focus, textarea:focus, select:focus{
   border-color: #7c5eff;
   outline: none;
 }
