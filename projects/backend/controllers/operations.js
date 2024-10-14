@@ -62,21 +62,21 @@ const saveUserData = async(req,res) => {
     }
 }
 
-// const login = async(req,res) => {
-//     console.log(req.body)
-//     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
-//     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
-//     if(isArcaptchaValid){
-//         const userData = {
-//             email,
-//             password,
-//             role
-//         }
-//         console.log(verifyUser(userData))
-//         res.send({success: true, message:'You Want to Login Right?'})
-//     }else{
-//         res.send({success: false, message:'Verify You are a Human!'})
-//     }
-// }
+const login = async(req,res) => {
+    console.log(req.body)
+    const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
+    const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+    if(isArcaptchaValid){
+        const userData = {
+            email,
+            password,
+            role
+        }
+        console.log(verifyUser(userData))
+        res.send({success: true, message:'You Want to Login Right?'})
+    }else{
+        res.send({success: false, message:'Verify You are a Human!'})
+    }
+}
 
 module.exports = {saveUserData,login}
