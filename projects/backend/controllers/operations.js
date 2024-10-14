@@ -27,18 +27,27 @@ async function writeToFile(userData){
     
     return dataArrString
 }
-const saveUserData = async(req,res) => {
-    // console.log("Request Body:", req.body);
-    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
+
+
+async function verifyArcaptcha(arcaptcha_token){
     const arcaptcha_api = "https://api.arcaptcha.co/arcaptcha/api/verify";
     const result = await axios.post(arcaptcha_api, {
         challenge_id: arcaptcha_token,
         site_key: "qh7aotm3n8",
         secret_key: "2orcx4w6tdv91a8uuzdj",
-      });
+    });
+    return result.data.success
+}
 
-    //   console.log(result.data)
-      if (result.data.success) {
+// function verifyUser(userData) {
+//     const filePath = role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
+   
+// }
+const saveUserData = async(req,res) => {
+    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
+    const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+    const filePath = './database/user.json'
+    if (isArcaptchaValid) {
         const userData = {
             name,
             companyName,
@@ -46,14 +55,29 @@ const saveUserData = async(req,res) => {
             phoneNumber,
             explanation
         }
-        const dataArrString = await writeToFile(userData)
+        const dataArrString = await writeToFile(userData,filePath)
         res.send({success: true, message: 'Your form successfully submited!'})
-      } else {
+    } else {
         res.send({success: false, message:'Verify You Are Human'})
         console.log('form submission failed')
-      }
-    
-    
+    }
 }
 
-module.exports = {saveUserData}
+// const login = async(req,res) => {
+//     console.log(req.body)
+//     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
+//     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+//     if(isArcaptchaValid){
+//         const userData = {
+//             email,
+//             password,
+//             role
+//         }
+//         console.log(verifyUser(userData))
+//         res.send({success: true, message:'You Want to Login Right?'})
+//     }else{
+//         res.send({success: false, message:'Verify You are a Human!'})
+//     }
+// }
+
+module.exports = {saveUserData,login}
