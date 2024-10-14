@@ -5,7 +5,7 @@
     </router-link>
   </nav>
   <div class="home">
-    <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent"/>
+    <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole"/>
   </div>
 </template>
 
@@ -28,8 +28,9 @@ export default {
     ]
     const headerContent = "Submit Your Details"
     const buttonContent = "Submit"
+    const multiRole = false
     
-    return {formFields, headerContent,buttonContent}
+    return {formFields, headerContent,buttonContent, multiRole}
   }
   
 }
