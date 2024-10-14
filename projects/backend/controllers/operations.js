@@ -48,7 +48,20 @@ async function readFromFile(filePath){
 async function verifyUser(userData) {
     const filePath = userData.role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
     const databaseArray = await readFromFile(filePath)
-    console.log(databaseArray)
+    let result = {success: false, message: `There is no ${userData.role} with your username`}
+
+    for(const user of databaseArray){
+        if(user.email === userData.email){
+            if(user.password === userData.password){
+                result.success = true
+                result.message = `Welcome Here!!`
+            }
+            else{
+                result.message = `Incorrect password`
+            }
+        }
+    }
+    return result
 }
 
 
@@ -73,7 +86,6 @@ const saveUserData = async(req,res) => {
 }
 
 const login = async(req,res) => {
-    console.log(req.body)
     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
     if(isArcaptchaValid){
@@ -82,8 +94,8 @@ const login = async(req,res) => {
             password,
             role
         }
-        console.log(verifyUser(userData))
-        res.send({success: true, message:'You Want to Login Right?'})
+        const result = await verifyUser(userData)
+        res.send(result)
     }else{
         res.send({success: false, message:'Verify You are a Human!'})
     }
