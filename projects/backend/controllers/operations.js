@@ -4,15 +4,8 @@ const axios = require('axios');
 
 async function writeToFile(userData, filePath){
     let databaseArray = []
-    try {
-        const stringDatabase = await fs.readFile(filePath,'utf-8')
-        if(stringDatabase){
-            databaseArray = JSON.parse(stringDatabase)
-        } 
-    } catch (err) {
-        console.log(`file doesn't exist!`)
-    }
-    
+    databaseArray = await readFromFile(filePath)
+
     databaseArray.push(userData)
     //adding null and 2 makes the json file more readable
     const dataArrString = JSON.stringify(databaseArray,null,2)
@@ -38,10 +31,27 @@ async function verifyArcaptcha(arcaptcha_token){
     return result.data.success
 }
 
-// function verifyUser(userData) {
-//     const filePath = role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
-   
-// }
+async function readFromFile(filePath){
+    let databaseArray = []
+    try {
+        const stringDatabase = await fs.readFile(filePath,'utf-8')
+        if(stringDatabase){
+            databaseArray = JSON.parse(stringDatabase)
+        } 
+    } catch (err) {
+        console.log(`file doesn't exist!`)
+    }
+    return databaseArray
+}
+
+
+async function verifyUser(userData) {
+    const filePath = userData.role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
+    const databaseArray = await readFromFile(filePath)
+    console.log(databaseArray)
+}
+
+
 const saveUserData = async(req,res) => {
     const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
