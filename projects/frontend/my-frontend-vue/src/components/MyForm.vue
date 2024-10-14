@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import arcaptchaVue3, { data } from 'arcaptcha-vue3';
+import arcaptchaVue3 from 'arcaptcha-vue3';
 import {ref, watch} from 'vue'
 import InputGroup from './InputGroup.vue'
 export default {
@@ -29,32 +29,56 @@ export default {
     arcaptchaVue3
   },
   props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo'],
-  setup(){
+  setup(props){
     const widget = ref(null)
     const role = ref('default')
 
     const handleSubmit = async () => {
       const form = document.querySelector('form')
       const formData = new FormData(form);
+      formData.append('role',role.value)
       const urlEncoded = new URLSearchParams(formData).toString();
+      console.log("this is urlencoded: ",urlEncoded)
 
-      fetch('http://localhost:3000/upload',{
-        method: "POST",
-        body: urlEncoded, // just 'fd' for multipart/form-data
-        headers: {
-          'Content-type': 'application/x-www-form-urlencoded'
-        }
-      }).then(response => response.json()).then(
-        data => {
-          if (data.success){
-            alert(data.message)
-            document.getElementById("myForm").reset()
-            window.arcaptcha.reset()
-          }else{
-            alert(data.message)
+      if(props.multiRole){
+        fetch('http://localhost:3000/login',{
+          method:"POST",
+          body: urlEncoded,
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
           }
-        }
-      )
+        }).then(response => response.json()).then(
+          data => {
+            if (data.success){
+              alert(data.message)
+              document.getElementById("myForm").reset()
+              window.arcaptcha.reset()
+            }else{
+              alert(data.message)
+            }
+          }
+        )
+      }
+      else{
+        fetch('http://localhost:3000/upload',{
+          method: "POST",
+          body: urlEncoded, // just 'fd' for multipart/form-data
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+          }
+        }).then(response => response.json()).then(
+          data => {
+            if (data.success){
+              alert(data.message)
+              document.getElementById("myForm").reset()
+              window.arcaptcha.reset()
+            }else{
+              alert(data.message)
+            }
+          }
+        )
+      }
+      
     }
     return{handleSubmit, widget, role}
   }
