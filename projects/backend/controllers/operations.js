@@ -2,8 +2,7 @@
 const fs = require('fs').promises
 const axios = require('axios');
 
-async function writeToFile(userData){
-    const filePath = './database/user.json'
+async function writeToFile(userData, filePath){
     let databaseArray = []
     try {
         const stringDatabase = await fs.readFile(filePath,'utf-8')
