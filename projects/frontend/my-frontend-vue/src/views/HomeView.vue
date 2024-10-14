@@ -1,6 +1,8 @@
 <template>
   <nav>
-    <button class="login-button">login</button>
+    <router-link :to="{name: 'login'}" class="login-link">
+      <button class="login-button">login</button>
+    </router-link>
   </nav>
   <div class="home">
     <MyForm :formFields="formFields"/>
@@ -40,7 +42,11 @@ nav{
   display: flex;
 
 }
-.login-button{
+.login-link {
+  display: inline-block;
   width: 10%;
+}
+.login-button{
+  width: 100%;
 }
 </style>
