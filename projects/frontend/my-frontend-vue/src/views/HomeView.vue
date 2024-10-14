@@ -5,7 +5,7 @@
     </router-link>
   </nav>
   <div class="home">
-    <MyForm :formFields="formFields"/>
+    <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent"/>
   </div>
 </template>
 
@@ -26,7 +26,10 @@ export default {
       {id: "phoneNumber", type: "tel", rows: "", placeholder: "Your phone number", label: "Phone Number: ", isRequired: true, fieldType:"input"},
       {id: "explanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Explanation: ", isRequired: true, fieldType:"textarea"}
     ]
-    return {formFields}
+    const headerContent = "Submit Your Details"
+    const buttonContent = "Submit"
+    
+    return {formFields, headerContent,buttonContent}
   }
   
 }

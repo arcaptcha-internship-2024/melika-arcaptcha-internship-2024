@@ -1,11 +1,11 @@
 <template>
   <form id="myForm" action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST" @submit.prevent="handleSubmit">
-    <h1>Submit Your Details</h1>
+    <h1>{{headerContent}}</h1>
     <div v-for="formField in formFields" :key="formField.id">
       <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType"/>
     </div>
     <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8"></arcaptchaVue3>
-    <button type="submit">Submit</button>
+    <button type="submit">{{buttonContent}}</button>
   </form>
 </template>
 
@@ -18,7 +18,7 @@ export default {
     InputGroup,
     arcaptchaVue3
   },
-  props:['formFields'],
+  props:['formFields', 'buttonContent', 'headerContent'],
   setup(){
     const widget = ref(null)
     const handleSubmit = async () => {
