@@ -5,7 +5,7 @@
     <div v-if="multiRole">
       <label :for="selectInfo.id">{{ selectInfo.label }}</label>
       <select v-model="role" :id="selectInfo.id">
-        <option v-for="option in selectInfo.options" :key="option.value" :value="option.value">{{option.content}}</option>
+        <option v-for="option in selectInfo.options" :key="option.value" :value="option.value" :disabled="option.isDisabled">{{option.content}}</option>
       </select>
     </div>
 
