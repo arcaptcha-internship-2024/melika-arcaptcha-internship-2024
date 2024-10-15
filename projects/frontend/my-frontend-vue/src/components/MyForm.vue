@@ -57,7 +57,7 @@ export default {
             if (data.success){
               alert(data.message)
               document.getElementById("myForm").reset()
-              // window.arcaptcha.reset()
+              role.value = 'default'
               reset()
 
             }else{
