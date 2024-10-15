@@ -2,7 +2,7 @@
   <form id="myForm" action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST" @submit.prevent="handleSubmit">
     <h1>{{headerContent}}</h1>
 
-    <div v-if="multiRole" id="selectRole">
+    <div v-if="multiRole">
       <label :for="selectInfo.id">{{ selectInfo.label }}</label>
       <select v-model="role" :id="selectInfo.id">
         <option v-for="option in selectInfo.options" :key="option.value" :value="option.value" :disabled="option.isDisabled">{{option.content}}</option>
@@ -16,7 +16,6 @@
     <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8" ref="widget"></arcaptchaVue3>
     
     <button type="submit">{{buttonContent}}</button>
-
   </form>
 </template>
 
@@ -24,15 +23,19 @@
 import arcaptchaVue3, { methods } from 'arcaptcha-vue3';
 import {ref, watch} from 'vue'
 import InputGroup from './InputGroup.vue'
+import { useRouter } from 'vue-router';
+
 export default {
   components: {
     InputGroup,
-    arcaptchaVue3
+    arcaptchaVue3,
   },
   props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo'],
   setup(props){
     const widget = ref(null)
     const role = ref('default')
+    const router = useRouter();
+
     const reset = () => {
       if (widget.value) {
         widget.value.reset();
@@ -43,7 +46,6 @@ export default {
       const formData = new FormData(form);
       formData.append('role',role.value)
       const urlEncoded = new URLSearchParams(formData).toString();
-      console.log("this is urlencoded: ",urlEncoded)
 
       if(props.multiRole){
         fetch('http://localhost:3000/login',{
@@ -56,9 +58,12 @@ export default {
           data => {
             if (data.success){
               alert(data.message)
-              document.getElementById("myForm").reset()
-              role.value = 'default'
-              reset()
+              // document.getElementById("myForm").reset()
+              // role.value = 'default'
+              // reset()
+              
+              const url = role.value === "admin" ? '/admin' : '/salesManager'
+              router.push(url)
 
             }else{
               alert(data.message)
@@ -70,7 +75,7 @@ export default {
       else{
         fetch('http://localhost:3000/upload',{
           method: "POST",
-          body: urlEncoded, // just 'fd' for multipart/form-data
+          body: urlEncoded,
           headers: {
             'Content-type': 'application/x-www-form-urlencoded'
           }
@@ -80,7 +85,6 @@ export default {
               alert(data.message)
               document.getElementById("myForm").reset()
               console.log(window.arcaptcha)
-              // window.arcaptcha.reset()
               reset()
             }else{
               alert(data.message)
