@@ -2,7 +2,7 @@
   <form id="myForm" action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST" @submit.prevent="handleSubmit">
     <h1>{{headerContent}}</h1>
 
-    <div v-if="multiRole">
+    <div v-if="multiRole" id="selectRole">
       <label :for="selectInfo.id">{{ selectInfo.label }}</label>
       <select v-model="role" :id="selectInfo.id">
         <option v-for="option in selectInfo.options" :key="option.value" :value="option.value" :disabled="option.isDisabled">{{option.content}}</option>
@@ -13,14 +13,15 @@
       <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType"/>
     </div>
 
-    <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8"></arcaptchaVue3>
-
+    <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8" ref="widget"></arcaptchaVue3>
+    
     <button type="submit">{{buttonContent}}</button>
+
   </form>
 </template>
 
 <script>
-import arcaptchaVue3 from 'arcaptcha-vue3';
+import arcaptchaVue3, { methods } from 'arcaptcha-vue3';
 import {ref, watch} from 'vue'
 import InputGroup from './InputGroup.vue'
 export default {
@@ -32,7 +33,11 @@ export default {
   setup(props){
     const widget = ref(null)
     const role = ref('default')
-
+    const reset = () => {
+      if (widget.value) {
+        widget.value.reset();
+      }
+    }
     const handleSubmit = async () => {
       const form = document.querySelector('form')
       const formData = new FormData(form);
@@ -52,9 +57,12 @@ export default {
             if (data.success){
               alert(data.message)
               document.getElementById("myForm").reset()
-              window.arcaptcha.reset()
+              // window.arcaptcha.reset()
+              reset()
+
             }else{
               alert(data.message)
+              reset()
             }
           }
         )
@@ -71,7 +79,9 @@ export default {
             if (data.success){
               alert(data.message)
               document.getElementById("myForm").reset()
-              window.arcaptcha.reset()
+              console.log(window.arcaptcha)
+              // window.arcaptcha.reset()
+              reset()
             }else{
               alert(data.message)
             }
@@ -81,6 +91,11 @@ export default {
       
     }
     return{handleSubmit, widget, role}
+  },
+  methods: {
+    reset(){
+      this.$refs.widget.reset();
+    }
   }
 }
 </script>
