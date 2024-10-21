@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import AdminView from '../views/AdminView.vue'
 import SalesManagerView from '../views/SalesManagerView.vue'
+import RegisterUserView from '../views/RegisterUserView.vue'
 
 const isLogin = false
 const routes = [
@@ -20,13 +21,19 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: AdminView,
-    meta: { requiresAuth: true, role: 'admin' }
+    meta: { requiresAuth: true}
   },
   {
     path: '/salesManager',
     name: 'salesManager',
     component: SalesManagerView,
-    meta: { requiresAuth: true, role: 'sales_manager' }
+    meta: { requiresAuth: true}
+  },
+  {
+    path: '/admin/registerUser',
+    name: 'registerUser',
+    component: RegisterUserView,
+    meta: { requiresAuth: true, role: 'admin'}
   }
 ]
 
