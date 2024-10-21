@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <router-link :to="{name: 'login', query: { headerContent: 'Register User', buttonContent: 'Register' }}" class="registerUser-link">
+    <router-link :to="{name: 'registerUser'}" class="registerUser-link">
       <button class="registerUser-button">Register User</button>
     </router-link>
   </nav>

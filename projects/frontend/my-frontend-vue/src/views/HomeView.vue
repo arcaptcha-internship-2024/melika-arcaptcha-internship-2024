@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <router-link :to="{name: 'login', query: { headerContent: 'Login to Your Account', buttonContent: 'Login' }}" class="login-link">
+    <router-link :to="{name: 'login'}" class="login-link">
       <button class="login-button">login</button>
     </router-link>
   </nav>
