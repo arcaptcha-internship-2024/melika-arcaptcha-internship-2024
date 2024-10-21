@@ -2,23 +2,24 @@
     <div class="login-page">
         <MyForm :formFields="loginFields" class="login-form" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :selectInfo="selectInfo"/>
     </div>
-  
 </template>
 
 <script>
 import MyForm from '../components/MyForm.vue'
+import { useRoute } from 'vue-router'
 export default {
     name:'LoginView',
     components:{
         MyForm
     },
     setup(){
+        const route = useRoute();
         const loginFields = [
             {id: "email", type: "email", rows: "", placeholder: "Your email", label: "Email: ", isRequired: true, fieldType:"input"},
             {id: "password", type: "password", rows: "", placeholder: "Your password", label: "Password: ", isRequired: true, fieldType:"input"},
         ]
-        const headerContent = "Login to Your Account"
-        const buttonContent = "Login"
+        const headerContent = route.query.headerContent
+        const buttonContent = route.query.buttonContent
         const multiRole = true
         const selectInfo = {
             id:"role",
