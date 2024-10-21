@@ -85,7 +85,7 @@ const saveUserData = async(req,res) => {
     }
 }
 
-const login = async(req,res) => {
+const login = async (fastify, req, res) => {
     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
     if(isArcaptchaValid){
@@ -95,7 +95,17 @@ const login = async(req,res) => {
             role
         }
         const result = await verifyUser(userData)
-        res.send(result)
+        if(result.success){
+            const token = fastify.jwt.sign({email: email, role: role}, { expiresIn: '1h' });
+            res.send({
+                success: true,
+                message: result.message,
+                jwtToken: token
+            })
+        }
+        else{
+            res.send(result)
+        }
     }else{
         res.send({success: false, message:'Verify You are a Human!'})
     }
