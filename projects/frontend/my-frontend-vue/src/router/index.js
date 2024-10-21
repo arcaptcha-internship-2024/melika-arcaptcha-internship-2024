@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import AdminView from '../views/AdminView.vue'
 import SalesManagerView from '../views/SalesManagerView.vue'
 import RegisterUserView from '../views/RegisterUserView.vue'
+import {jwtDecode} from 'jwt-decode'
 
 const isLogin = false
 const routes = [
@@ -21,13 +22,13 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: AdminView,
-    meta: { requiresAuth: true}
+    meta: { requiresAuth: true, role: 'admin'}
   },
   {
     path: '/salesManager',
     name: 'salesManager',
     component: SalesManagerView,
-    meta: { requiresAuth: true}
+    meta: { requiresAuth: true, role: 'sales_manager'}
   },
   {
     path: '/admin/registerUser',
@@ -46,7 +47,14 @@ router.beforeEach((to,from, next) => {
   if(to.meta.requiresAuth){
     const token = localStorage.getItem('jwtToken')
     if(token){
-      next()
+      const decodedToken = jwtDecode(token);
+      const userRole = decodedToken.role
+      if(to.meta.role && to.meta.role === userRole){
+        next()
+      }else{
+        next('/login')
+      }
+      
     }
     else{
       next('/login')
