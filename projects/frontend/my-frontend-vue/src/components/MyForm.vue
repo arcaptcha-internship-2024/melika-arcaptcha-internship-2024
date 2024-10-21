@@ -91,11 +91,13 @@ export default {
         )
       }
       else{
+        const jwtToken = localStorage.getItem('jwtToken');
         fetch('http://localhost:3000/registerUser',{
           method:"POST",
           body: urlEncoded,
           headers: {
-            'Content-type': 'application/x-www-form-urlencoded'
+            'Content-type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${jwtToken}`
           }
         }).then(response => response.json()).then(
           data => {
