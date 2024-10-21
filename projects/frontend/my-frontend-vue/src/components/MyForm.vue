@@ -46,8 +46,7 @@ export default {
       const formData = new FormData(form);
       formData.append('role',role.value)
       const urlEncoded = new URLSearchParams(formData).toString();
-
-      if(props.multiRole){
+      if(props.buttonContent === "Login"){
         fetch('http://localhost:3000/login',{
           method:"POST",
           body: urlEncoded,
@@ -71,7 +70,7 @@ export default {
           }
         )
       }
-      else{
+      else if (props.buttonContent === "Submit"){
         fetch('http://localhost:3000/upload',{
           method: "POST",
           body: urlEncoded,
@@ -87,6 +86,27 @@ export default {
               reset()
             }else{
               alert(data.message)
+            }
+          }
+        )
+      }
+      else{
+        fetch('http://localhost:3000/registerUser',{
+          method:"POST",
+          body: urlEncoded,
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+          }
+        }).then(response => response.json()).then(
+          data => {
+            if (data.success){
+              console.log(data)
+              alert(data.message)
+              document.getElementById("myForm").reset()
+              reset()
+            }else{
+              alert(data.message)
+              reset()
             }
           }
         )
