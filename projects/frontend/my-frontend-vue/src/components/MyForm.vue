@@ -57,11 +57,10 @@ export default {
         }).then(response => response.json()).then(
           data => {
             if (data.success){
+              console.log(data)
               alert(data.message)
-              // document.getElementById("myForm").reset()
-              // role.value = 'default'
-              // reset()
-              
+              console.log(data.jwtToken)
+              localStorage.setItem('jwtToken', data.jwtToken);
               const url = role.value === "admin" ? '/admin' : '/salesManager'
               router.push(url)
 
