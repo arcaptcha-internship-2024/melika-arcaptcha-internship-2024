@@ -25,7 +25,8 @@ const routes = [
   {
     path: '/salesManager',
     name: 'salesManager',
-    component: SalesManagerView
+    component: SalesManagerView,
+    meta: { requiresAuth: true, role: 'sales_manager' }
   }
 ]
 
