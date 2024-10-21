@@ -31,6 +31,7 @@ async function verifyArcaptcha(arcaptcha_token){
     return result.data.success
 }
 
+
 async function readFromFile(filePath){
     let databaseArray = []
     try {
@@ -85,6 +86,7 @@ const saveUserData = async(req,res) => {
     }
 }
 
+
 const login = async (fastify, req, res) => {
     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
@@ -111,4 +113,23 @@ const login = async (fastify, req, res) => {
     }
 }
 
-module.exports = {saveUserData,login}
+
+const registerUser = async (fastify, req, res) => {
+    const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
+    const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+    if(isArcaptchaValid){
+        const userData = {
+            email,
+            password
+        }
+        const path = role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
+        const dataArrString = await writeToFile(userData,path)
+        res.send({success: true, message: 'User successfully registered!'})
+        
+    }else{
+        res.send({success: false, message:'Verify You are a Human!'})
+    }
+}
+
+
+module.exports = {saveUserData,login, registerUser}
