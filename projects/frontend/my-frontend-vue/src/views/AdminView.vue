@@ -3,11 +3,14 @@
     <router-link :to="{name: 'registerUser'}" class="registerUser-link">
       <button class="registerUser-button">Register User</button>
     </router-link>
-    <button class="toggle-button">Users</button>
-    <button class="toggle-button" @click="toggleShowSalesManager">Sales Managers</button>
+    <button class="toggle-button" @click="toggle('users')">Users</button>
+    <button class="toggle-button" @click="toggle('showSalesManagers')">Sales Managers</button>
   </nav>
   <div v-if="showSalesManagers">
-    <UserCardList />
+    <UserCardList :path="salesManagersPath" :isSalesManager="true"/>
+  </div>
+  <div v-if="showUsers">
+    <UserCardList :path="usersPath" :isSalesManager="false"/>
   </div>
 </template>
 
@@ -19,11 +22,26 @@ export default {
   components: {UserCardList, UserCard},
   setup(){
     const showSalesManagers = ref(false)
-    const toggleShowSalesManager = () => {
-      showSalesManagers.value = !showSalesManagers.value
+    const showUsers = ref(false)
+    const salesManagersPath = ref('http://localhost:3000/getSalesManagers')
+    const usersPath = ref('http://localhost:3000/getUsers')
+    const toggle = (showList) => {
+      if(showList === 'users'){
+        showUsers.value = !showUsers.value
+        if(showUsers.value){
+          showSalesManagers.value = false
+        }
+      }
+      else{
+        showSalesManagers.value = !showSalesManagers.value
+        if(showSalesManagers.value){
+          showUsers.value = false
+        }
+      }
+
     }
     
-    return{showSalesManagers,toggleShowSalesManager}
+    return{showSalesManagers,toggle, salesManagersPath,showUsers, usersPath}
   }
 }
 </script>
