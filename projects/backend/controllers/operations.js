@@ -131,8 +131,9 @@ const registerUser = async (fastify, req, res) => {
     }
 }
 
-const getSalesManagers = async(req,res) => {
-    const salesManagers = await readFromFile('./database/salesManagers.json')
-    res.send(salesManagers)
+const getUsers = async(path,req,res) => {
+    const users = await readFromFile(path)
+    res.send(users)
 }
-module.exports = {saveUserData,login, registerUser, getSalesManagers}
+
+module.exports = {saveUserData,login, registerUser, getUsers}
