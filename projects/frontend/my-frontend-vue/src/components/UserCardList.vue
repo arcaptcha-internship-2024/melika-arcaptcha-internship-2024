@@ -1,7 +1,14 @@
 <template>
   <div class="userCard-list">
-    <div v-for="manager in salesManagers" :key="manager.email">
-        <UserCard :user="manager"/>
+    <div v-if="isSalesManager">
+        <div v-for="user in users" :key="user.email">
+            <UserCard :user="user"/>
+        </div>
+    </div>
+    <div v-else>
+        <div v-for="user in users" :key="user.name">
+            <UserCard :user="user"/>
+        </div>
     </div>
   </div>
 </template>
@@ -13,11 +20,12 @@ export default {
     components:{
         UserCard
     },
-    setup(){
+    props:['path','isSalesManager'],
+    setup(props){
         const length = ref(0)
-        const salesManagers = ref([])
+        const users = ref([])
         const jwtToken = localStorage.getItem('jwtToken');
-        fetch('http://localhost:3000/getSalesManagers',{
+        fetch(props.path,{
             method:"GET",
             headers: {
             'Content-type': 'application/x-www-form-urlencoded',
@@ -25,13 +33,13 @@ export default {
             }
         }).then(response => response.json()).then(
             data => {
-            salesManagers.value = data
-            length.value = salesManagers.value.length
-            console.log("this is sales managers",salesManagers)
+                console.log(data)
+                users.value = data
+                length.value = users.value.length
             }
         )
         
-    return {salesManagers}
+    return {users}
     }
 }
 </script>
