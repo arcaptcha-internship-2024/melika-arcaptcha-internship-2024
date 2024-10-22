@@ -1,7 +1,8 @@
 const {saveUserData} = require('../controllers/operations')
 const {login} = require('../controllers/operations')
 const {registerUser} = require('../controllers/operations')
-const {getSalesManagers} = require('../controllers/operations')
+const {getUsers} = require('../controllers/operations')
+
 function routes(fastify,options,done){
     fastify.register(require('@fastify/formbody'));
     fastify.post('/upload',saveUserData)
@@ -11,7 +12,13 @@ function routes(fastify,options,done){
     fastify.post('/registerUser', async (request, reply) => {
         await registerUser(fastify, request, reply);
     });
-    fastify.get('/getSalesManagers', getSalesManagers)
+
+    fastify.get('/getSalesManagers', async (request, reply) => {
+        await getUsers('./database/salesManagers.json', request, reply);
+    });
+    fastify.get('/getUsers', async (request, reply) => {
+        await getUsers('./database/user.json', request, reply);
+    });
     done()
 }
 
