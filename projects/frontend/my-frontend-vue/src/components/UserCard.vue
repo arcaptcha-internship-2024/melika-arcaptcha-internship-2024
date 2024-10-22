@@ -2,6 +2,9 @@
   <div class="user-card">
     <h1>{{user.email}}</h1>
     <p>{{user.password}}</p>
+
+    <h1>{{user.name}}</h1>
+    <p>{{user.companyName}}</p>
   </div>
 </template>
 
