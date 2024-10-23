@@ -1,10 +1,13 @@
 <template>
-  <nav>
+  <nav class="nav-container">
     <router-link :to="{name: 'registerUser'}" class="registerUser-link">
       <button class="registerUser-button">Register User</button>
     </router-link>
     <button class="toggle-button" @click="toggle('users')">Users</button>
     <button class="toggle-button" @click="toggle('showSalesManagers')">Sales Managers</button>
+    <router-link>
+      <button class="register-button">View Logs</button>
+    </router-link>
   </nav>
   <div v-if="showSalesManagers">
     <UserCardList :path="salesManagersPath" :isSalesManager="true"/>
@@ -59,7 +62,7 @@ nav{
   width: 100%;
 }
 .toggle-button{
-  width: 40%;
+  width: 39%;
   margin: 0 10px 0 10px
 }
 </style>
