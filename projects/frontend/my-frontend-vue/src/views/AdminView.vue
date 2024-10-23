@@ -12,6 +12,9 @@
       <button class="logout-button">Log Out</button>
     </router-link>
   </nav>
+  <div class="create">
+    <button class="create-button">Create</button>
+  </div>
   <div v-if="showSalesManagers">
     <UserCardList :path="salesManagersPath" :isSalesManager="true"/>
   </div>
@@ -70,5 +73,13 @@ nav{
 }
 .logout-button{
   margin-left: 10px;
+}
+.create{
+  margin-top: 10px;
+  display: flex;
+}
+.create-button{
+  display: inline-block;
+  width: 10%;
 }
 </style>
