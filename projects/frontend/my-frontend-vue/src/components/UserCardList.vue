@@ -7,7 +7,7 @@
     </div>
     <div v-else>
         <div v-for="user in users" :key="user.name">
-            <UserCard :user="user"/>
+            <UserCard :user="user" :role="role"/> 
         </div>
     </div>
   </div>
@@ -24,6 +24,7 @@ export default {
     setup(props){
         const length = ref(0)
         const users = ref([])
+        const role = ref('')
         const jwtToken = localStorage.getItem('jwtToken');
         fetch(props.path,{
             method:"GET",
@@ -38,8 +39,12 @@ export default {
                 length.value = users.value.length
             }
         )
-        
-    return {users}
+        if(props.isSalesManager){
+            role.value = 'sales_manager'
+        }else{
+            role.value = 'admin'
+        }
+        return {users, role}
     }
 }
 </script>
