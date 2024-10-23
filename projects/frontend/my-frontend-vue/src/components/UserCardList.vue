@@ -2,7 +2,7 @@
   <div class="userCard-list">
     <div v-if="isSalesManager">
         <div v-for="user in users" :key="user.email">
-            <UserCard :user="user"/>
+            <UserCard :user="user" :role="role"/>
         </div>
     </div>
     <div v-else>
@@ -20,8 +20,9 @@ export default {
     components:{
         UserCard
     },
-    props:['path','isSalesManager'],
+    props:['path','isSalesManager','role'],
     setup(props){
+        console.log(props.role,"!!!!!!!!!!!!!!!!!!!!!!!")
         const length = ref(0)
         const users = ref([])
         const role = ref('')
@@ -39,10 +40,10 @@ export default {
                 length.value = users.value.length
             }
         )
-        if(props.isSalesManager){
-            role.value = 'sales_manager'
-        }else{
+        if(props.role === 'admin'){
             role.value = 'admin'
+        }else{
+            role.value = 'sales_manager'
         }
         return {users, role}
     }
