@@ -138,25 +138,32 @@ const getUsers = async(path,req,res) => {
 
 const updateUser = async(req,res) => {
     const id = req.body.id
-    const {name, companyName, jobPosition, phoneNumber, explanation} = req.body
+    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
     let databaseArray = []
     const filePath = './database/user.json'
-    databaseArray = await readFromFile(filePath)
-    updatedDatabaseArray = databaseArray.map(user => {
-        if(user.id === id){
-            return{...user, name:name, companyName,companyName, jobPosition,jobPosition,phoneNumber,phoneNumber,explanation:explanation}
-        }else{
-            return user
+    const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+    if(isArcaptchaValid){
+        databaseArray = await readFromFile(filePath)
+        updatedDatabaseArray = databaseArray.map(user => {
+            if(user.id === id){
+                return{...user, name:name, companyName,companyName, jobPosition,jobPosition,phoneNumber,phoneNumber,explanation:explanation}
+            }else{
+                return user
+            }
+        })
+        const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
+        try {
+            await fs.writeFile(filePath,dataArrString)
+            console.log('file successfully written!')
+        } catch (err) {
+            console.log(err)
         }
-    })
-    const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
-    try {
-        await fs.writeFile(filePath,dataArrString)
-        console.log('file successfully written!')
-    } catch (err) {
-        console.log(err)
+        res.send({success:true, message:'user successfully updated!'})
     }
-    res.send({success:true, message:'user successfully updated!'})
+    else {
+        res.send({success: false, message:'Verify You Are Human'})
+        console.log('form submission failed')
+    }
 
 }
 
