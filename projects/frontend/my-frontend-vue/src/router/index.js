@@ -5,6 +5,7 @@ import AdminView from '../views/AdminView.vue'
 import SalesManagerView from '../views/SalesManagerView.vue'
 import RegisterUserView from '../views/RegisterUserView.vue'
 import CreateView from '../views/CreateView.vue'
+import UserDetail from '../views/UserDetail.vue'
 import {jwtDecode} from 'jwt-decode'
 
 const routes = [
@@ -41,6 +42,12 @@ const routes = [
     name: 'create',
     component: CreateView,
     meta: { requiresAuth: true}
+  },
+  {
+    path:'/users/:id',
+    name: 'userDetail',
+    component: UserDetail,
+    props:true
   }
 ]
 
