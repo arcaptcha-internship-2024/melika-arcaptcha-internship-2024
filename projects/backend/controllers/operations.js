@@ -136,4 +136,28 @@ const getUsers = async(path,req,res) => {
     res.send(users)
 }
 
-module.exports = {saveUserData,login, registerUser, getUsers}
+const updateUser = async(req,res) => {
+    const id = req.body.id
+    const {name, companyName, jobPosition, phoneNumber, explanation} = req.body
+    let databaseArray = []
+    const filePath = './database/user.json'
+    databaseArray = await readFromFile(filePath)
+    updatedDatabaseArray = databaseArray.map(user => {
+        if(user.id === id){
+            return{...user, name:name, companyName,companyName, jobPosition,jobPosition,phoneNumber,phoneNumber,explanation:explanation}
+        }else{
+            return user
+        }
+    })
+    const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
+    try {
+        await fs.writeFile(filePath,dataArrString)
+        console.log('file successfully written!')
+    } catch (err) {
+        console.log(err)
+    }
+    res.send({success:true, message:'user successfully updated!'})
+
+}
+
+module.exports = {saveUserData,login, registerUser, getUsers, updateUser}
