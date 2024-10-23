@@ -13,13 +13,15 @@
     </router-link>
   </nav>
   <div class="create">
-    <button class="create-button">Create</button>
+    <router-link class="no-style" :to="{name: 'create'}">
+      <button class="create-button">Create</button> 
+    </router-link>
   </div>
   <div v-if="showSalesManagers">
-    <UserCardList :path="salesManagersPath" :isSalesManager="true"/>
+    <UserCardList :path="salesManagersPath" :isSalesManager="true" :role="role"/>
   </div>
   <div v-if="showUsers">
-    <UserCardList :path="usersPath" :isSalesManager="false"/>
+    <UserCardList :path="usersPath" :isSalesManager="false" :role="role"/>
   </div>
 </template>
 
@@ -30,6 +32,7 @@ import UserCard from '../components/UserCard.vue'
 export default {
   components: {UserCardList, UserCard},
   setup(){
+    const role = ref('admin')
     const showSalesManagers = ref(false)
     const showUsers = ref(false)
     const salesManagersPath = ref('http://localhost:3000/getSalesManagers')
@@ -50,7 +53,7 @@ export default {
 
     }
     
-    return{showSalesManagers,toggle, salesManagersPath,showUsers, usersPath}
+    return{showSalesManagers,toggle, salesManagersPath,showUsers, usersPath, role}
   }
 }
 </script>
