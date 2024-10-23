@@ -3,6 +3,8 @@ const {login} = require('../controllers/operations')
 const {registerUser} = require('../controllers/operations')
 const {getUsers} = require('../controllers/operations')
 const {updateUser} = require('../controllers/operations')
+const {deleteUser} = require('../controllers/operations')
+
 function routes(fastify,options,done){
     fastify.register(require('@fastify/formbody'));
     fastify.post('/upload',saveUserData)
@@ -20,6 +22,7 @@ function routes(fastify,options,done){
         await getUsers('./database/user.json', request, reply);
     });
     fastify.post('/updateUser',updateUser)
+    fastify.delete('/deleteUser', deleteUser)
     done()
 }
 
