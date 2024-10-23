@@ -47,7 +47,12 @@ const routes = [
     path:'/users/:id',
     name: 'userDetail',
     component: UserDetail,
-    props:true
+    props:(route) =>{
+      return {
+          id: route.params.id,
+          action: route.query.action
+      };
+    }
   }
 ]
 
