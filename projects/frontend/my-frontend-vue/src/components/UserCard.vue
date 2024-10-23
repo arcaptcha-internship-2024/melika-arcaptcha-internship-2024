@@ -2,14 +2,13 @@
   <div class="user-card">
     <h1>{{user.email}}</h1>
     <p>{{user.password}}</p>
-
     <h1>{{user.name}}</h1>
     <p>{{user.companyName}}</p>
     <div class="actions">
         <router-link class="no-style" :to="{name: 'userDetail', params: {id: user.id}, query: {action: 'read'}}">
             <button class="action-button">Read</button>
         </router-link>
-        <button class="action-button" v-if="deleteAccess">Delete</button>
+        <button class="action-button" @click="deleteUser" v-if="deleteAccess">Delete</button>
         <router-link class="no-style" :to="{name : 'userDetail', params:{id: user.id}, query:{action: 'update'}}">
             <button class="action-button">Update</button>
         </router-link>
@@ -28,7 +27,30 @@ export default {
         if(props.role === 'admin'){
             deleteAccess.value = true
         }
-        return {deleteAccess}
+        const deleteUser = async()=>{
+          const jwtToken = localStorage.getItem('jwtToken');
+          console.log(JSON.stringify({ id: props.user.id }))
+          fetch('http://localhost:3000/deleteUser',{
+            method: "DELETE",
+            headers: {
+            'Content-Type': 'application/json', // Send as JSON
+            'Authorization': `Bearer ${jwtToken}`, // Include token for authentication
+          },
+          body: JSON.stringify({ id: props.user.id }),
+          }).then(response => response.json()).then(
+            data => {
+              if (data.success){
+                alert(data.message)
+                window.location.reload();
+                
+              }else{
+                alert(data.message)
+                reset()
+              }
+            }
+          )
+        }
+        return {deleteAccess, deleteUser}
     }
 }
 </script>
