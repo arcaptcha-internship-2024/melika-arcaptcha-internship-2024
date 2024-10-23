@@ -22,7 +22,6 @@ export default {
     },
     props:['path','isSalesManager','role'],
     setup(props){
-        console.log(props.role,"!!!!!!!!!!!!!!!!!!!!!!!")
         const length = ref(0)
         const users = ref([])
         const role = ref('')

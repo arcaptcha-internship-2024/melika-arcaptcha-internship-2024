@@ -14,7 +14,6 @@
     </div>
 
     <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8" ref="widget"></arcaptchaVue3>
-    
     <button type="submit">{{buttonContent}}</button>
   </form>
 </template>
