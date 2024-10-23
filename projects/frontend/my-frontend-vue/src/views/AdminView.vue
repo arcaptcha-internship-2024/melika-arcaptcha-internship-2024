@@ -8,6 +8,9 @@
     <router-link>
       <button class="register-button">View Logs</button>
     </router-link>
+    <router-link>
+      <button class="logout-button">Log Out</button>
+    </router-link>
   </nav>
   <div v-if="showSalesManagers">
     <UserCardList :path="salesManagersPath" :isSalesManager="true"/>
@@ -58,11 +61,14 @@ nav{
   display: inline-block;
   width: 10%;
 }
-.registerUser-button{
+.registerUser-button, .logout-button{
   width: 100%;
 }
 .toggle-button{
-  width: 39%;
+  width: 35%;
   margin: 0 10px 0 10px
+}
+.logout-button{
+  margin-left: 10px;
 }
 </style>
