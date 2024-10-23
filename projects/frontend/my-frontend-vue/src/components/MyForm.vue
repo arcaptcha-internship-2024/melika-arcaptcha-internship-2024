@@ -10,7 +10,7 @@
     </div>
 
     <div v-for="formField in formFields" :key="formField.id" class="form-field">
-      <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType"/>
+      <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType" :value="formField.value"/>
     </div>
 
     <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8" ref="widget"></arcaptchaVue3>
@@ -29,7 +29,7 @@ export default {
     InputGroup,
     arcaptchaVue3,
   },
-  props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo'],
+  props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo','id'],
   setup(props){
     const widget = ref(null)
     const role = ref('default')
@@ -45,6 +45,8 @@ export default {
       const formData = new FormData(form);
       formData.append('role',role.value)
       const urlEncoded = new URLSearchParams(formData).toString();
+      formData.append('id', props.id )
+      const myUrlEncoded = new URLSearchParams(formData).toString();
       if(props.buttonContent === "Login"){
         fetch('http://localhost:3000/login',{
           method:"POST",
@@ -85,6 +87,31 @@ export default {
               reset()
             }else{
               alert(data.message)
+            }
+          }
+        )
+      }
+      else if(props.buttonContent === "Save"){
+        const jwtToken = localStorage.getItem('jwtToken');
+        fetch('http://localhost:3000/updateUser',{
+          method:"POST",
+          body: myUrlEncoded,
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${jwtToken}`
+          }
+        }).then(response => response.json()).then(
+          data => {
+            if (data.success){
+              console.log(data)
+              alert(data.message)
+              // document.getElementById("myForm").reset()
+              // reset()
+              window.location.reload();
+              
+            }else{
+              alert(data.message)
+              reset()
             }
           }
         )
