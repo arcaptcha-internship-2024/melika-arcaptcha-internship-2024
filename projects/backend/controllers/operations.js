@@ -20,6 +20,17 @@ async function writeToFile(userData, filePath){
     return dataArrString
 }
 
+function getTime(){
+    let date_time = new Date();
+    let date = ("0" + date_time.getDate()).slice(-2);
+    let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
+    let year = date_time.getFullYear();
+    let hours = date_time.getHours();
+    let minutes = date_time.getMinutes();
+    let seconds = date_time.getSeconds();
+    const result = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds
+    return result
+}
 
 async function verifyArcaptcha(arcaptcha_token){
     const arcaptcha_api = "https://api.arcaptcha.co/arcaptcha/api/verify";
@@ -67,16 +78,24 @@ async function verifyUser(userData) {
 
 
 const saveUserData = async(req,res) => {
+    const { v4: uuidv4 } = require('uuid'); 
     const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
     const filePath = './database/user.json'
+    const uniqueId = uuidv4()
+    const createdDate = getTime()
     if (isArcaptchaValid) {
         const userData = {
+            id: uniqueId,
             name,
             companyName,
             jobPosition,
             phoneNumber,
-            explanation
+            explanation,
+            createdDate: createdDate,
+            lastUpdate: createdDate,
+            status: 'Pending',
+            supervisorExplanation: ''
         }
         const dataArrString = await writeToFile(userData,filePath)
         res.send({success: true, message: 'Your form successfully submited!'})
@@ -167,4 +186,23 @@ const updateUser = async(req,res) => {
 
 }
 
-module.exports = {saveUserData,login, registerUser, getUsers, updateUser}
+const deleteUser = async(req,res) => {
+    const filePath = './database/user.json'
+
+    const id = req.body.id
+
+    let databaseArray = []
+    databaseArray = await readFromFile(filePath)
+    const updatedDatabaseArray = databaseArray.filter(user => user.id !== id);
+    const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
+        try {
+            await fs.writeFile(filePath,dataArrString)
+            console.log('file successfully written!')
+        } catch (err) {
+            console.log(err)
+        }
+        res.send({success:true, message:'user Successfully deleted!'})
+
+}
+
+module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser}
