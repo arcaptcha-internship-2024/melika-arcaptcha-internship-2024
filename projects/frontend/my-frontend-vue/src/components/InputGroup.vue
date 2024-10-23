@@ -2,10 +2,10 @@
   <div class="input-group">
     <label :for="id">{{label}}</label>
     <div v-if="fieldType === 'input'">
-      <input :type="type" :id="id" :name="id" :placeholder="placeholder" :required="isRequired">
+      <input :type="type" :id="id" :name="id" :placeholder="placeholder" :required="isRequired" :value="value">
     </div>
     <div v-else>
-      <textarea :name="id" :id="id" :rows="rows" :placeholder="placeholder"></textarea>
+      <textarea :name="id" :id="id" :rows="rows" :placeholder="placeholder" :value="value"></textarea>
     </div>
    
     
@@ -21,8 +21,12 @@ export default {
     'placeholder',
     'label',
     'isRequired',
-    'fieldType'
-  ]
+    'fieldType',
+    'value'
+  ],
+  setup(props){
+    console.log(props.value)
+  }
 }
 </script>
 
