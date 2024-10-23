@@ -6,7 +6,7 @@
     <h1>{{user.name}}</h1>
     <p>{{user.companyName}}</p>
     <div class="actions">
-        <router-link class="no-style">
+        <router-link class="no-style" :to="{name: 'userDetail', params: {id: user.id}}">
             <button class="action-button">Read</button>
         </router-link>
         <button class="action-button" v-if="deleteAccess">Delete</button>
