@@ -1,7 +1,7 @@
 version: '3'
 services:
   my-form:
-    build: ./frontend
+    build: ./frontend/my-frontend-vue
     ports:
       - "8080:80"
     depends_on:
@@ -11,5 +11,7 @@ services:
     build: ./backend
     volumes:
       - ./backend/database/user.json:/app/database/user.json
+      - ./backend/database/admins.json:/app/database/admins.json
+      - ./backend/database/salesManagers.json:/app/database/salesManagers.json
     ports:
       - "3000:3000"
