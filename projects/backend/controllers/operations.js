@@ -205,4 +205,25 @@ const deleteUser = async(req,res) => {
 
 }
 
-module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser}
+const downloadUsers = async (request,reply) => {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    try {
+        const filePath = '../database/user.json'
+        // Check if the file exists
+        if (fs.existsSync(filePath)) {
+            console.log('downloadddddd!!!!!!!!!!!!!!!!!!!!')
+            reply.header('Content-Disposition', 'attachment; filename="user.json"');
+            reply.header('Content-Type', 'application/json');
+            return reply.send(fs.createReadStream(filePath));
+        } else {
+            console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+            reply.code(404).send({ error: 'File not found' });
+        }
+    } catch (error) {
+        console.log("********************************")
+        request.log.error(error);
+        reply.code(500).send({ error: 'Internal Server Error' });
+    }
+}
+
+module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser,downloadUsers}
