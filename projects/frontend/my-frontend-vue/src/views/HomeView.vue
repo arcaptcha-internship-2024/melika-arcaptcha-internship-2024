@@ -1,11 +1,13 @@
 <template>
-  <nav>
+  <div>
+    <nav>
     <router-link :to="{name: 'login'}" class="login-link">
       <button class="login-button">login</button>
     </router-link>
   </nav>
   <div class="home">
     <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole"/>
+  </div>
   </div>
 </template>
 
