@@ -1,14 +1,15 @@
 <template>
-  
   <div class="userCard-list">
+
     <button class="download-btn" @click="downloadUsers">Download</button>
+     <SearchBar v-if="!isSalesManager" @updateFilters="handleUpdateFilters"/>
     <div v-if="isSalesManager">
-        <div v-for="user in users" :key="user.email">
+        <div v-for="user in filteredUsers" :key="user.email">
             <UserCard :user="user" :role="role"/>
         </div>
     </div>
     <div v-else>
-        <div v-for="user in users" :key="user.name">
+        <div v-for="user in filteredUsers" :key="user.name">
             <UserCard :user="user" :role="role"/> 
         </div>
     </div>
@@ -16,14 +17,21 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, computed} from 'vue'
 import UserCard from '../components/UserCard.vue'
+import SearchBar from '../components/SearchBar.vue'
 export default {
     components:{
-        UserCard
+        UserCard,
+        SearchBar
     },
     props:['path','isSalesManager','role'],
     setup(props){
+        const filters= ref({
+            name: "",
+            phoneNumber: "",
+            status: ""
+        })
         const length = ref(0)
         const users = ref([])
         const role = ref('')
@@ -75,7 +83,22 @@ export default {
                 console.error('There was a problem with the download:', error);
             });
         }
-        return {users, role, downloadUsers}
+
+        const handleUpdateFilters = (newFilters) => {
+            filters.value = newFilters;
+        };
+
+        const filteredUsers = computed(() => {
+            return users.value.filter((user) => {
+                const matchesName = filters.value.name ? user.name.toLowerCase().includes(filters.value.name.toLowerCase()) : true;
+                const matchesPhoneNumber = filters.value.phoneNumber ? user.phoneNumber.includes(filters.value.phoneNumber) : true;
+                const matchesStatus = filters.value.status ? user.status === filters.value.status : true;
+
+                return matchesName && matchesPhoneNumber && matchesStatus;
+            });
+            });
+
+        return {users, role, downloadUsers, filters, handleUpdateFilters, filteredUsers}
     }
 }
 </script>
