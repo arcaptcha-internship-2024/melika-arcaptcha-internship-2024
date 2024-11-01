@@ -1,4 +1,4 @@
-const {saveUserData, downloadUsers} = require('../controllers/operations')
+const {saveUserData, downloadUsers, addLog} = require('../controllers/operations')
 const {login} = require('../controllers/operations')
 const {registerUser} = require('../controllers/operations')
 const {getUsers} = require('../controllers/operations')
@@ -46,6 +46,10 @@ function routes(fastify,options,done){
             request.log.error(error);
             reply.code(500).send({ error: 'Internal Server Error' });
         }
+    });
+    fastify.post('/addLogs',addLog)
+    fastify.get('/getLogs', async (request, reply) => {
+        await getUsers('./database/logs.json', request, reply);
     });
     done()
 }

@@ -6,7 +6,9 @@ import SalesManagerView from '../views/SalesManagerView.vue'
 import RegisterUserView from '../views/RegisterUserView.vue'
 import CreateView from '../views/CreateView.vue'
 import UserDetail from '../views/UserDetail.vue'
+import ViewLogsView from '../views/ViewLogsView.vue'
 import {jwtDecode} from 'jwt-decode'
+import { name } from 'arcaptcha-vue3'
 
 const routes = [
   {
@@ -53,6 +55,12 @@ const routes = [
           action: route.query.action
       };
     }
+  },
+  {
+    path: '/logs',
+    name:'Logs',
+    component: ViewLogsView,
+    meta: { requiresAuth: true}
   }
 ]
 

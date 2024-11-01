@@ -33,12 +33,18 @@ function getTime(){
 }
 
 async function verifyArcaptcha(arcaptcha_token){
+    console.log("heyyyyyyyyy!!!!!!!!!!!!################ARRRRRRR")
+
     const arcaptcha_api = "https://api.arcaptcha.co/arcaptcha/api/verify";
+    console.log("heyyyyyyyyy!!!!!!!!!!!!################","jdl;fja;jdsf;lajsd;fjas;dfj;lsjd")
+
     const result = await axios.post(arcaptcha_api, {
         challenge_id: arcaptcha_token,
         site_key: "qh7aotm3n8",
         secret_key: "2orcx4w6tdv91a8uuzdj",
     });
+    console.log("heyyyyyyyyy!!!!!!!!!!!!################","&&&&&&&&&&&&&&&&&&&&",result.data.success)
+
     return result.data.success
 }
 
@@ -135,6 +141,7 @@ const login = async (fastify, req, res) => {
 
 const registerUser = async (fastify, req, res) => {
     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
+    
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
     if(isArcaptchaValid){
         const userData = {
@@ -156,11 +163,16 @@ const getUsers = async(path,req,res) => {
 }
 
 const updateUser = async(req,res) => {
+
     const id = req.body.id
-    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
+    console.log(req.body)
+    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token, role , email,action,date} = req.body
+    const logData = role[1] + " " + email + " "+ action + " " + name + " data at " + date
     let databaseArray = []
     const filePath = './database/user.json'
+
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+
     if(isArcaptchaValid){
         databaseArray = await readFromFile(filePath)
         updatedDatabaseArray = databaseArray.map(user => {
@@ -178,6 +190,8 @@ const updateUser = async(req,res) => {
             console.log(err)
         }
         res.send({success:true, message:'user successfully updated!'})
+        writeToFile(logData,'./database/logs.json')
+
     }
     else {
         res.send({success: false, message:'Verify You Are Human'})
@@ -226,4 +240,10 @@ const downloadUsers = async (request,reply) => {
     }
 }
 
-module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser,downloadUsers}
+const addLog = async(request, reply) => {
+    const {email, role, name, date, action } = request.body
+    const logData = role + " " + email + " "+ action + " " + name + " data at " + date
+    writeToFile(logData,'./database/logs.json')
+
+}
+module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser,downloadUsers, addLog}

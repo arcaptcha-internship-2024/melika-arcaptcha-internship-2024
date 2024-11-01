@@ -6,13 +6,12 @@
     <p>{{user.companyName}}</p>
     <div class="actions">
         <router-link class="no-style" :to="{name: 'userDetail', params: {id: user.id}, query: {action: 'read'}}">
-            <button class="action-button">Read</button>
+            <button class="action-button" @click="addLogs('read')">Read</button>
         </router-link>
         <button class="action-button" @click="deleteUser" v-if="deleteAccess">Delete</button>
         <router-link class="no-style" :to="{name : 'userDetail', params:{id: user.id}, query:{action: 'update'}}">
             <button class="action-button">Update</button>
         </router-link>
-        
     </div>
   </div>
   
@@ -20,6 +19,8 @@
 
 <script>
 import {ref} from 'vue'
+import {jwtDecode} from 'jwt-decode'
+
 export default {
     props:['user', 'role'],
     setup(props){
@@ -30,6 +31,7 @@ export default {
         const deleteUser = async()=>{
           const jwtToken = localStorage.getItem('jwtToken');
           console.log(JSON.stringify({ id: props.user.id }))
+          addLogs('delete')
           fetch('http://localhost:3000/deleteUser',{
             method: "DELETE",
             headers: {
@@ -50,7 +52,28 @@ export default {
             }
           )
         }
-        return {deleteAccess, deleteUser}
+
+        const addLogs = async(action) =>{
+          const jwtToken = localStorage.getItem('jwtToken');
+          const decodedToken = jwtDecode(jwtToken);
+          const role = decodedToken.role
+          const email = decodedToken.email
+          const name = props.user.name
+          const date = new Date().toISOString();
+          // const action = "read"
+
+          fetch("http://localhost:3000/addLogs", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify({ email, role, name, date, action }),
+        }); 
+
+
+        }
+        return {deleteAccess, deleteUser, addLogs}
     }
 }
 </script>

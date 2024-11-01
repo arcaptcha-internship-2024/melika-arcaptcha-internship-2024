@@ -23,6 +23,8 @@ import arcaptchaVue3, { methods } from 'arcaptcha-vue3';
 import {ref, watch} from 'vue'
 import InputGroup from './InputGroup.vue'
 import { useRouter } from 'vue-router';
+import {jwtDecode} from 'jwt-decode'
+
 
 export default {
   components: {
@@ -93,9 +95,22 @@ export default {
       }
       else if(props.buttonContent === "Save"){
         const jwtToken = localStorage.getItem('jwtToken');
+        const decodedToken = jwtDecode(jwtToken)
+        const role = decodedToken.role
+        const email = decodedToken.email
+        const date = new Date().toISOString()
+        const action = "update"
+        const params = new URLSearchParams(myUrlEncoded);
+
+        // Append additional fields
+        params.append('role', role);
+        params.append('email', email);
+        params.append('date', date);
+        params.append('action', action)
+        const updatedUrlEncoded = params.toString();
         fetch('http://localhost:3000/updateUser',{
           method:"POST",
-          body: myUrlEncoded,
+          body: updatedUrlEncoded,
           headers: {
             'Content-type': 'application/x-www-form-urlencoded',
             'Authorization': `Bearer ${jwtToken}`
@@ -115,12 +130,26 @@ export default {
             }
           }
         )
+
       }
       else{
         const jwtToken = localStorage.getItem('jwtToken');
+        const decodedToken = jwtDecode(jwtToken)
+        const role = decodedToken.role
+        const email = decodedToken.email
+        const date = new Date().toISOString()
+        const action = "update"
+        const params = new URLSearchParams(myUrlEncoded);
+
+        // Append additional fields
+        params.append('role', role);
+        params.append('email', email);
+        params.append('date', date);
+        params.append('action', action)
+        const updatedUrlEncoded = params.toString();
         fetch('http://localhost:3000/registerUser',{
           method:"POST",
-          body: urlEncoded,
+          body: updatedUrlEncoded,
           headers: {
             'Content-type': 'application/x-www-form-urlencoded',
             'Authorization': `Bearer ${jwtToken}`
