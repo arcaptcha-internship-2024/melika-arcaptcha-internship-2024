@@ -13,6 +13,7 @@ export default {
     setup(){
         const logs = ref([])
         const length = ref(0)
+        
         const jwtToken = localStorage.getItem('jwtToken');
         fetch('http://localhost:3000/getLogs',{
             method:"GET",
@@ -27,7 +28,7 @@ export default {
                 length.value = logs.value.length
             }
         )
-
+        return{logs,length}
     }
 }
 </script>

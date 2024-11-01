@@ -5,7 +5,7 @@
     </router-link>
     <button class="toggle-button" @click="toggle('users')">Users</button>
     <button class="toggle-button" @click="toggle('showSalesManagers')">Sales Managers</button>
-    <router-link>
+    <router-link :to="{name: 'Logs'}">
       <button class="register-button">View Logs</button>
     </router-link>
 
