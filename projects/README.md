@@ -1,0 +1,1 @@
+- add database and env into git ignore

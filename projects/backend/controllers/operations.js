@@ -2,25 +2,25 @@
 const fs = require('fs').promises
 const axios = require('axios');
 
-async function writeToFile(userData, filePath){
+async function writeToFile(userData, filePath) {
     let databaseArray = []
     databaseArray = await readFromFile(filePath)
 
     databaseArray.push(userData)
     //adding null and 2 makes the json file more readable
-    const dataArrString = JSON.stringify(databaseArray,null,2)
+    const dataArrString = JSON.stringify(databaseArray, null, 2)
 
     try {
-        await fs.writeFile(filePath,dataArrString)
+        await fs.writeFile(filePath, dataArrString)
         console.log('file successfully written!')
     } catch (err) {
         console.log(err)
     }
-    
+
     return dataArrString
 }
 
-function getTime(){
+function getTime() {
     let date_time = new Date();
     let date = ("0" + date_time.getDate()).slice(-2);
     let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
@@ -32,30 +32,32 @@ function getTime(){
     return result
 }
 
-async function verifyArcaptcha(arcaptcha_token){
+// TODO : add try catcha and return true or false
+// TODO : isArcaptchaValid / isCaptchaValid
+async function verifyArcaptcha(arcaptcha_token) {
     console.log("heyyyyyyyyy!!!!!!!!!!!!################ARRRRRRR")
 
     const arcaptcha_api = "https://api.arcaptcha.co/arcaptcha/api/verify";
-    console.log("heyyyyyyyyy!!!!!!!!!!!!################","jdl;fja;jdsf;lajsd;fjas;dfj;lsjd")
+    console.log("heyyyyyyyyy!!!!!!!!!!!!################", "jdl;fja;jdsf;lajsd;fjas;dfj;lsjd")
 
     const result = await axios.post(arcaptcha_api, {
         challenge_id: arcaptcha_token,
         site_key: "qh7aotm3n8",
         secret_key: "2orcx4w6tdv91a8uuzdj",
     });
-    console.log("heyyyyyyyyy!!!!!!!!!!!!################","&&&&&&&&&&&&&&&&&&&&",result.data.success)
+    console.log("heyyyyyyyyy!!!!!!!!!!!!################", "&&&&&&&&&&&&&&&&&&&&", result.data.success)
 
     return result.data.success
 }
 
 
-async function readFromFile(filePath){
+async function readFromFile(filePath) {
     let databaseArray = []
     try {
-        const stringDatabase = await fs.readFile(filePath,'utf-8')
-        if(stringDatabase){
+        const stringDatabase = await fs.readFile(filePath, 'utf-8')
+        if (stringDatabase) {
             databaseArray = JSON.parse(stringDatabase)
-        } 
+        }
     } catch (err) {
         console.log(`file doesn't exist!`)
     }
@@ -63,18 +65,20 @@ async function readFromFile(filePath){
 }
 
 
+// Secure Coding
 async function verifyUser(userData) {
     const filePath = userData.role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
     const databaseArray = await readFromFile(filePath)
-    let result = {success: false, message: `There is no ${userData.role} with your username`}
+    let result = { success: false, message: `There is no ${userData.role} with your username` }
 
-    for(const user of databaseArray){
-        if(user.email === userData.email){
-            if(user.password === userData.password){
+
+    for (const user of databaseArray) {
+        if (user.email === userData.email) {
+            if (user.password === userData.password) {
                 result.success = true
                 result.message = `Welcome Here!!`
             }
-            else{
+            else {
                 result.message = `Incorrect password`
             }
         }
@@ -83,13 +87,22 @@ async function verifyUser(userData) {
 }
 
 
-const saveUserData = async(req,res) => {
-    const { v4: uuidv4 } = require('uuid'); 
-    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
+const saveUserData = async (req, res) => {
+
+    const { v4: uuidv4 } = require('uuid');
+    // --; Delete  * from users; validation required in email field
+    const { name, companyName, jobPosition, phoneNumber, explanation, 'arcaptcha-token': arcaptcha_token } = req.body;
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
     const filePath = './database/user.json'
     const uniqueId = uuidv4()
     const createdDate = getTime()
+    // TODO: how can we delete or remove or exlcude some keys like arcaptcha-token in new object
+    // const userData = {
+    //     ...req.body, // object destruction / spread operator
+    //     id: uniqueId,
+    //     supervisorExplanation: ''
+    //     role_id: 1
+    // }
     if (isArcaptchaValid) {
         const userData = {
             id: uniqueId,
@@ -103,123 +116,128 @@ const saveUserData = async(req,res) => {
             status: 'Pending',
             supervisorExplanation: ''
         }
-        const dataArrString = await writeToFile(userData,filePath)
-        res.send({success: true, message: 'Your form successfully submited!'})
+        const dataArrString = await writeToFile(userData, filePath)
+        res.send({ success: true, message: 'Your form successfully submited!' })
     } else {
-        res.send({success: false, message:'Verify You Are Human'})
+        res.send({ success: false, message: 'Verify You Are Human' })
         console.log('form submission failed')
     }
 }
 
-
+// TODO: use hooks for captcha verification
 const login = async (fastify, req, res) => {
-    const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
+    const { email, password, 'arcaptcha-token': arcaptcha_token, role } = req.body
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
-    if(isArcaptchaValid){
+    if (isArcaptchaValid) {
         const userData = {
             email,
             password,
             role
         }
         const result = await verifyUser(userData)
-        if(result.success){
-            const token = fastify.jwt.sign({email: email, role: role}, { expiresIn: '1h' });
+        if (result.success) {
+            const token = fastify.jwt.sign({ email: email, role: role }, { expiresIn: '1h' });
             res.send({
                 success: true,
                 message: result.message,
                 jwtToken: token
             })
         }
-        else{
+        else {
             res.send(result)
         }
-    }else{
-        res.send({success: false, message:'Verify You are a Human!'})
+    } else {
+        res.send({ success: false, message: 'Verify You are a Human!' })
     }
 }
 
 
 const registerUser = async (fastify, req, res) => {
-    const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
-    
+    const { email, password, 'arcaptcha-token': arcaptcha_token, role } = req.body
+
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
-    if(isArcaptchaValid){
+    if (isArcaptchaValid) {
         const userData = {
             email,
             password
         }
+
         const path = role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
-        const dataArrString = await writeToFile(userData,path)
-        res.send({success: true, message: 'User successfully registered!'})
-        
-    }else{
-        res.send({success: false, message:'Verify You are a Human!'})
+        const dataArrString = await writeToFile(userData, path)
+        res.send({ success: true, message: 'User successfully registered!' })
+
+    } else {
+        res.send({ success: false, message: 'Verify You are a Human!' })
     }
 }
 
-const getUsers = async(path,req,res) => {
+const getUsers = async (path, req, res) => {
     const users = await readFromFile(path)
     res.send(users)
 }
 
-const updateUser = async(req,res) => {
+const updateUser = async (req, res) => {
 
     const id = req.body.id
     console.log(req.body)
-    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token, role , email,action,date} = req.body
-    const logData = role[1] + " " + email + " "+ action + " " + name + " data at " + date
+    const { name, companyName, jobPosition, phoneNumber, explanation, 'arcaptcha-token': arcaptcha_token, role, email, action, date } = req.body
+    const logData = role[1] + " " + email + " " + action + " " + name + " data at " + date
     let databaseArray = []
     const filePath = './database/user.json'
 
     const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
 
-    if(isArcaptchaValid){
+    if (isArcaptchaValid) {
         databaseArray = await readFromFile(filePath)
         updatedDatabaseArray = databaseArray.map(user => {
-            if(user.id === id){
-                return{...user, name:name, companyName,companyName, jobPosition,jobPosition,phoneNumber,phoneNumber,explanation:explanation}
-            }else{
+            if (user.id === id) {
+                return { ...user, name: name, companyName, companyName, jobPosition, jobPosition, phoneNumber, phoneNumber, explanation: explanation }
+            } else {
                 return user
             }
         })
-        const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
+        const dataArrString = JSON.stringify(updatedDatabaseArray, null, 2)
         try {
-            await fs.writeFile(filePath,dataArrString)
+            await fs.writeFile(filePath, dataArrString)
             console.log('file successfully written!')
         } catch (err) {
             console.log(err)
         }
-        res.send({success:true, message:'user successfully updated!'})
-        writeToFile(logData,'./database/logs.json')
+        res.send({ success: true, message: 'user successfully updated!' })
+        writeToFile(logData, './database/logs.json')
 
     }
     else {
-        res.send({success: false, message:'Verify You Are Human'})
+        res.send({ success: false, message: 'Verify You Are Human' })
         console.log('form submission failed')
     }
 
 }
 
-const deleteUser = async(req,res) => {
+const deleteUser = async (req, res) => {
     const filePath = './database/user.json'
 
     const id = req.body.id
 
     let databaseArray = []
+    // TODO: repository.read()
     databaseArray = await readFromFile(filePath)
     const updatedDatabaseArray = databaseArray.filter(user => user.id !== id);
-    const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
-        try {
-            await fs.writeFile(filePath,dataArrString)
-            console.log('file successfully written!')
-        } catch (err) {
-            console.log(err)
-        }
-        res.send({success:true, message:'user Successfully deleted!'})
+    const dataArrString = JSON.stringify(updatedDatabaseArray, null, 2)
+    try {
+        // TODO: change fs to service
+        await fs.writeFile(filePath, dataArrString)
+        console.log('file successfully written!')
+    } catch (err) {
+        console.log(err)
+    }
+    res.send({ success: true, message: 'user Successfully deleted!' })
 
 }
 
-const downloadUsers = async (request,reply) => {
+
+// TODO: relocate all file functionalities into seperated module
+const downloadUsers = async (request, reply) => {
     console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     try {
         const filePath = '../database/user.json'
@@ -240,10 +258,10 @@ const downloadUsers = async (request,reply) => {
     }
 }
 
-const addLog = async(request, reply) => {
-    const {email, role, name, date, action } = request.body
-    const logData = role + " " + email + " "+ action + " " + name + " data at " + date
-    writeToFile(logData,'./database/logs.json')
+const addLog = async (request, reply) => {
+    const { email, role, name, date, action } = request.body
+    const logData = role + " " + email + " " + action + " " + name + " data at " + date
+    writeToFile(logData, './database/logs.json')
 
 }
-module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser,downloadUsers, addLog}
+module.exports = { saveUserData, login, registerUser, getUsers, updateUser, deleteUser, downloadUsers, addLog }
