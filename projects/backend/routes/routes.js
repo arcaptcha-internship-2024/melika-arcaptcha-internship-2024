@@ -17,10 +17,10 @@ function routes(fastify,options,done){
     });
 
     fastify.get('/getSalesManagers', async (request, reply) => {
-        await getUsers('./database/salesManagers.json', request, reply);
+        await getUsers('./database/users.json', request, reply);
     });
     fastify.get('/getUsers', async (request, reply) => {
-        await getUsers('./database/user.json', request, reply);
+        await getUsers('./database/customers.json', request, reply);
     });
     fastify.post('/updateUser',updateUser)
     fastify.delete('/deleteUser', deleteUser)
@@ -29,12 +29,12 @@ function routes(fastify,options,done){
     // })
     fastify.get('/downloadUsersList', async (request, reply) => {
         try {
-            const filePath = './database/user.json';
+            const filePath = './database/customers.json';
     
             // Check if the file exists
             if (fs.existsSync(filePath)) {
                 console.log("OKKKKKKKKKKKKKKKKKK")
-                reply.header('Content-Disposition', 'attachment; filename="user.json"');
+                reply.header('Content-Disposition', 'attachment; filename="customers.json"');
                 reply.header('Content-Type', 'application/json');
                 return reply.send(fs.createReadStream(filePath));
             } else {
