@@ -32,16 +32,18 @@ function getTime(){
     return result
 }
 
-async function verifyArcaptcha(arcaptcha_token){
-    const arcaptcha_api = process.env.CAPTCHA_API;
-
-    const result = await axios.post(arcaptcha_api, {
-        challenge_id: arcaptcha_token,
-        site_key: process.env.SITE_KEY,
-        secret_key: process.env.SECRET_KEY,
-    });
-
-    return result.data.success
+async function isCaptchaValid(captcha_token){
+    const captcha_api = process.env.CAPTCHA_API;
+    try {
+        const result = await axios.post(captcha_api, {
+            challenge_id: captcha_token,
+            site_key: process.env.SITE_KEY,
+            secret_key: process.env.SECRET_KEY,
+        })
+        return result.data.success
+    } catch (error) {
+        return false
+    }
 }
 
 
@@ -82,7 +84,7 @@ async function verifyUser(userData) {
 const saveUserData = async(req,res) => {
     const { v4: uuidv4 } = require('uuid'); 
     const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
-    const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+    const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
     const filePath = './database/user.json'
     const uniqueId = uuidv4()
     const createdDate = getTime()
@@ -110,7 +112,7 @@ const saveUserData = async(req,res) => {
 
 const login = async (fastify, req, res) => {
     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
-    const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+    const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
     if(isArcaptchaValid){
         const userData = {
             email,
@@ -138,7 +140,7 @@ const login = async (fastify, req, res) => {
 const registerUser = async (fastify, req, res) => {
     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
     
-    const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+    const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
     if(isArcaptchaValid){
         const userData = {
             email,
@@ -167,7 +169,7 @@ const updateUser = async(req,res) => {
     let databaseArray = []
     const filePath = './database/user.json'
 
-    const isArcaptchaValid = await verifyArcaptcha(arcaptcha_token)
+    const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
 
     if(isArcaptchaValid){
         databaseArray = await readFromFile(filePath)
