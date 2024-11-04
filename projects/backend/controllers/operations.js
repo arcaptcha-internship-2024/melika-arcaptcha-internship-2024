@@ -43,7 +43,6 @@ async function isCaptchaValid(captcha_token){
             site_key: process.env.SITE_KEY,
             secret_key: process.env.SECRET_KEY,
         })
-        console.log('this is captcha result:',result.data.success)
         return result.data.success
     } catch (error) {
         return false

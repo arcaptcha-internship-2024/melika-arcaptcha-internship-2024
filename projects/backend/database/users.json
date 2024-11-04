@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "email": "javaddd@j.com",
+    "password": "11ljffsdaf",
+    "role": "admin"
+  },
+  {
+    "id": "2",
+    "email": "melika@gmail.com",
+    "password": "12345",
+    "role": "admin"
+  },
+  {
+    "id": "3",
+    "email": "nima@gmail.com",
+    "password": "12345",
+    "role": "sales_manager"
+  },
+  {
+    "id": "4",
+    "email": "hamid@gmail.com",
+    "password": "12345",
+    "role": "sales_manager"
+  }
+]
