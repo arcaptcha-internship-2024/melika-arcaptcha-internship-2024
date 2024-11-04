@@ -2,5 +2,5 @@
 exercises/.DS_Store
 exercises/crud/crud_fastify/node_modules
 projects/backend/node_modules
-projects/backend/.env
+projects/.env
 projects/frontend/my-frontend-vue/node_modules
