@@ -1,10 +1,9 @@
 <template>
   <div class="userCard-list">
-
     <button class="download-btn" @click="downloadUsers">Download</button>
      <SearchBar v-if="!isSalesManager" @updateFilters="handleUpdateFilters"/>
     <div v-if="isSalesManager">
-        <div v-for="user in filteredUsers" :key="user.email">
+        <div v-for="user in users" :key="user.email">
             <UserCard :user="user" :role="role"/>
         </div>
     </div>
@@ -44,7 +43,7 @@ export default {
             }
         }).then(response => response.json()).then(
             data => {
-                console.log(data)
+                console.log("heyyyy",data)
                 users.value = data
                 length.value = users.value.length
             }
@@ -96,7 +95,8 @@ export default {
 
                 return matchesName && matchesPhoneNumber && matchesStatus;
             });
-            });
+        });
+        // console.log('this is filtered users:',filteredUsers)
 
         return {users, role, downloadUsers, filters, handleUpdateFilters, filteredUsers}
     }
