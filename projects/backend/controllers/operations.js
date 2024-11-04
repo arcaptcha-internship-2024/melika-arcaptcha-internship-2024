@@ -2,6 +2,7 @@
 const fs = require('fs').promises
 const axios = require('axios');
 
+
 async function writeToFile(userData, filePath){
     let databaseArray = []
     databaseArray = await readFromFile(filePath)
@@ -20,6 +21,7 @@ async function writeToFile(userData, filePath){
     return dataArrString
 }
 
+
 function getTime(){
     let date_time = new Date();
     let date = ("0" + date_time.getDate()).slice(-2);
@@ -32,6 +34,7 @@ function getTime(){
     return result
 }
 
+
 async function isCaptchaValid(captcha_token){
     const captcha_api = process.env.CAPTCHA_API;
     try {
@@ -40,6 +43,7 @@ async function isCaptchaValid(captcha_token){
             site_key: process.env.SITE_KEY,
             secret_key: process.env.SECRET_KEY,
         })
+        console.log('this is captcha result:',result.data.success)
         return result.data.success
     } catch (error) {
         return false
@@ -62,21 +66,20 @@ async function readFromFile(filePath){
 
 
 async function verifyUser(userData) {
-    const filePath = userData.role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
+    const filePath = './database/users.json'
     const databaseArray = await readFromFile(filePath)
-    let result = {success: false, message: `There is no ${userData.role} with your username`}
+    let result = {success: false, message: `Wrong Username or Password!`, userRole:''}
 
     for(const user of databaseArray){
         if(user.email === userData.email){
             if(user.password === userData.password){
                 result.success = true
                 result.message = `Welcome Here!!`
-            }
-            else{
-                result.message = `Incorrect password`
+                result.userRole = user.role
             }
         }
     }
+    console.log('this is result:',result)
     return result
 }
 
@@ -85,7 +88,7 @@ const saveUserData = async(req,res) => {
     const { v4: uuidv4 } = require('uuid'); 
     const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
     const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
-    const filePath = './database/user.json'
+    const filePath = './database/customers.json'
     const uniqueId = uuidv4()
     const createdDate = getTime()
     if (isArcaptchaValid) {
@@ -111,17 +114,16 @@ const saveUserData = async(req,res) => {
 
 
 const login = async (fastify, req, res) => {
-    const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
+    const {email, password,'arcaptcha-token':arcaptcha_token } = req.body
     const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
     if(isArcaptchaValid){
         const userData = {
             email,
-            password,
-            role
+            password
         }
         const result = await verifyUser(userData)
         if(result.success){
-            const token = fastify.jwt.sign({email: email, role: role}, { expiresIn: '1h' });
+            const token = fastify.jwt.sign({email: email, role: result.userRole}, { expiresIn: '1h' });
             res.send({
                 success: true,
                 message: result.message,
@@ -141,12 +143,13 @@ const registerUser = async (fastify, req, res) => {
     const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
     
     const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
+    
     if(isArcaptchaValid){
         const userData = {
             email,
             password
         }
-        const path = role === 'admin' ? './database/admins.json' : './database/salesManagers.json'
+        const path = './database/users.json'
         const dataArrString = await writeToFile(userData,path)
         res.send({success: true, message: 'User successfully registered!'})
         
@@ -167,7 +170,7 @@ const updateUser = async(req,res) => {
     const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token, role , email,action,date} = req.body
     const logData = role[1] + " " + email + " "+ action + " " + name + " data at " + date
     let databaseArray = []
-    const filePath = './database/user.json'
+    const filePath = './database/customers.json'
 
     const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
 
@@ -199,7 +202,7 @@ const updateUser = async(req,res) => {
 }
 
 const deleteUser = async(req,res) => {
-    const filePath = './database/user.json'
+    const filePath = './database/customers.json'
 
     const id = req.body.id
 
@@ -220,11 +223,11 @@ const deleteUser = async(req,res) => {
 const downloadUsers = async (request,reply) => {
     console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     try {
-        const filePath = '../database/user.json'
+        const filePath = '../database/customers.json'
         // Check if the file exists
         if (fs.existsSync(filePath)) {
             console.log('downloadddddd!!!!!!!!!!!!!!!!!!!!')
-            reply.header('Content-Disposition', 'attachment; filename="user.json"');
+            reply.header('Content-Disposition', 'attachment; filename="customers.json"');
             reply.header('Content-Type', 'application/json');
             return reply.send(fs.createReadStream(filePath));
         } else {
