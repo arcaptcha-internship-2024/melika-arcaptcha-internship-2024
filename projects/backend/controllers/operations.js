@@ -33,17 +33,13 @@ function getTime(){
 }
 
 async function verifyArcaptcha(arcaptcha_token){
-    console.log("heyyyyyyyyy!!!!!!!!!!!!################ARRRRRRR")
-
-    const arcaptcha_api = "https://api.arcaptcha.co/arcaptcha/api/verify";
-    console.log("heyyyyyyyyy!!!!!!!!!!!!################","jdl;fja;jdsf;lajsd;fjas;dfj;lsjd")
+    const arcaptcha_api = process.env.CAPTCHA_API;
 
     const result = await axios.post(arcaptcha_api, {
         challenge_id: arcaptcha_token,
-        site_key: "qh7aotm3n8",
-        secret_key: "2orcx4w6tdv91a8uuzdj",
+        site_key: process.env.SITE_KEY,
+        secret_key: process.env.SECRET_KEY,
     });
-    console.log("heyyyyyyyyy!!!!!!!!!!!!################","&&&&&&&&&&&&&&&&&&&&",result.data.success)
 
     return result.data.success
 }
