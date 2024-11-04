@@ -12,7 +12,7 @@ export default {
     components:{
         MyForm
     },
-    props:['headerContent','buttonContent'],
+    props:['headerContent','buttonContent','multiRole'],
     setup(props){
         const userFields = [
             {id: "email", type: "email", rows: "", placeholder: "Your email", label: "Email: ", isRequired: true, fieldType:"input"},
@@ -20,7 +20,7 @@ export default {
         ]
         const headerContent = props.headerContent
         const buttonContent = props.buttonContent
-        const multiRole = true
+
         const selectInfo = {
             id:"role",
             label: "Select Role: ",
@@ -30,7 +30,7 @@ export default {
                 {value: "sales_manager",content: "Sales Manager", isDisabled: false}
             ]
         }
-        return {userFields, headerContent, buttonContent, multiRole, selectInfo}
+        return {userFields, headerContent, buttonContent, selectInfo}
     }
 }
 </script>
