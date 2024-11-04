@@ -1,6 +1,6 @@
 <template>
     <div class="login-form">
-        <UserForm :buttonContent="buttonContent" :headerContent="headerContent" />
+        <UserForm :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="false" />
     </div>
 </template>
 
