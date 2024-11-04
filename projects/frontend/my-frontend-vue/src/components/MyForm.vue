@@ -1,7 +1,6 @@
 <template>
   <form id="myForm" action="http://localhost:3000" enctype="application/x-www-form-urlencoded" method="POST" @submit.prevent="handleSubmit">
     <h1>{{headerContent}}</h1>
-
     <div v-if="multiRole">
       <label :for="selectInfo.id">{{ selectInfo.label }}</label>
       <select v-model="role" :id="selectInfo.id">
@@ -63,6 +62,8 @@ export default {
               alert(data.message)
               console.log(data.jwtToken)
               localStorage.setItem('jwtToken', data.jwtToken);
+              const decodedToken = jwtDecode(data.jwtToken)
+              role.value = decodedToken.role
               const url = role.value === "admin" ? '/admin' : '/salesManager'
               router.push(url)
 
