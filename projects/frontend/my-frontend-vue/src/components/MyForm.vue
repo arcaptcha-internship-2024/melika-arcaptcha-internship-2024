@@ -44,7 +44,7 @@ export default {
     const handleSubmit = async () => {
       const form = document.querySelector('form')
       const formData = new FormData(form);
-      formData.append('role',role.value)
+      // formData.append('role',role.value)
       const urlEncoded = new URLSearchParams(formData).toString();
       formData.append('id', props.id )
       const myUrlEncoded = new URLSearchParams(formData).toString();
@@ -97,14 +97,15 @@ export default {
       else if(props.buttonContent === "Save"){
         const jwtToken = localStorage.getItem('jwtToken');
         const decodedToken = jwtDecode(jwtToken)
-        const role = decodedToken.role
+        const userRole = decodedToken.role
         const email = decodedToken.email
         const date = new Date().toISOString()
         const action = "update"
         const params = new URLSearchParams(myUrlEncoded);
 
         // Append additional fields
-        params.append('role', role);
+        params.append('status',role.value)
+        params.append('role', userRole);
         params.append('email', email);
         params.append('date', date);
         params.append('action', action)
