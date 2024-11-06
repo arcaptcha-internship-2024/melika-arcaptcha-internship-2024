@@ -6,12 +6,17 @@ services:
       - "8080:80"
     depends_on:
       - my-server
-
+    volumes:
+      # Mount custom Nginx config
+      - ./frontend/my-frontend-vue/nginx.conf:/etc/nginx/conf.d/default.conf
+      
   my-server:
     build: ./backend
+    env_file:
+      - ./.env
     volumes:
-      - ./backend/database/user.json:/app/database/user.json
-      - ./backend/database/admins.json:/app/database/admins.json
-      - ./backend/database/salesManagers.json:/app/database/salesManagers.json
+      - ./backend/database/users.json:/app/database/users.json
+      - ./backend/database/customers.json:/app/database/customers.json
+      - ./backend/database/logs.json:/app/database/logs.json
     ports:
       - "3000:3000"
