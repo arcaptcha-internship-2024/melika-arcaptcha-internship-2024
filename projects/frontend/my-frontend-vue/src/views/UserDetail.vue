@@ -1,10 +1,14 @@
 <template>
     <div v-if="action === 'read'">
-        <h1>{{user.name}}</h1>
-        <h2>{{user.companyName}}</h2>
-        <h2>{{user.jobPosition}}</h2>
-        <h3>{{user.phoneNumber}}</h3>
-        <p>{{user.explanation}}</p>
+        <h1>Name: {{user.name}}</h1>
+        <h2>Status: {{user.status}}</h2>
+        <h2>Company Name: {{user.companyName}}</h2>
+        <h2>Job Position: {{user.jobPosition}}</h2>
+        <h3>Phone Number: {{user.phoneNumber}}</h3>
+        <p>User Explanation: {{user.explanation}}</p>
+        <h3>Created Date: {{user.createdDate}}</h3>
+        <h3>Last Update: {{user.lastUpdate}}</h3>
+        <p>SupervisorExplanation: {{user.SupervisorExplanation}}</p>
     </div>
     <div v-else>
         <div class="update-form">
