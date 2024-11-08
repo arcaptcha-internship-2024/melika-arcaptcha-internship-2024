@@ -33,7 +33,7 @@ export default {
             { id: "createdDate", type: "text", rows: "", placeholder: "Created Date", label: "Created Date: ", isRequired: true, fieldType: "input", value: "" },
             { id: "lastUpdate", type: "text", rows: "", placeholder: "Last update", label: "Last Update: ", isRequired: true, fieldType: "input", value: "" },
             { id: "explanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Customer Explanation: ", isRequired: true, fieldType: "textarea", value: "" },
-            { id: "SupervisorExplanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Supervisor Explanation: ", isRequired: true, fieldType: "textarea", value: "" },
+            { id: "supervisorExplanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Supervisor Explanation: ", isRequired: true, fieldType: "textarea", value: "" },
             
         ]);
         const headerContent = "Update Info"
