@@ -11,8 +11,8 @@
         <p>SupervisorExplanation: {{user.SupervisorExplanation}}</p>
     </div>
     <div v-else>
-        <div class="update-form">
-            <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo"/>
+        <div class="update-form" v-if="isFetched">
+            <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo" :status="status"/>
         </div>
     </div>
 </template>
@@ -24,6 +24,7 @@ export default {
     props:['id','action'],
     components:{MyForm},
     setup(props){
+        const isFetched = ref(false)
         const formFields = ref([
             { id: "name", type: "text", rows: "", placeholder: "Your full name", label: "Name: ", isRequired: true, fieldType: "input", value: "" },
             { id: "companyName", type: "text", rows: "", placeholder: "Company you work for", label: "Company Name: ", isRequired: true, fieldType: "input", value: "" },
@@ -31,6 +32,7 @@ export default {
             { id: "phoneNumber", type: "tel", rows: "", placeholder: "Your phone number", label: "Phone Number: ", isRequired: true, fieldType: "input", value: "" },
             { id: "createdDate", type: "text", rows: "", placeholder: "Created Date", label: "Created Date: ", isRequired: true, fieldType: "input", value: "" },
             { id: "lastUpdate", type: "text", rows: "", placeholder: "Last update", label: "Last Update: ", isRequired: true, fieldType: "input", value: "" },
+            { id: "explanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Customer Explanation: ", isRequired: true, fieldType: "textarea", value: "" },
             { id: "SupervisorExplanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Supervisor Explanation: ", isRequired: true, fieldType: "textarea", value: "" },
             
         ]);
@@ -41,7 +43,7 @@ export default {
             id:"status",
             label: "Select Status: ",
             options: [
-                {value: "default",content: "Pending", isDisabled: false},
+                {value: "pending",content: "Pending", isDisabled: false},
                 {value: "processing",content: "Processing", isDisabled: false},
                 {value: "processed",content: "Processed", isDisabled: false}
             ]
@@ -49,7 +51,7 @@ export default {
         const jwtToken = localStorage.getItem('jwtToken');
         const user = ref({})
         const users = ref([])
-
+        const status = ref('')
         fetch('http://localhost:3000/getUsers',{
             method:"GET",
             headers: {
@@ -61,14 +63,18 @@ export default {
                 users.value = data
                 const foundUser = users.value.find(user => user.id === props.id)
                 if(foundUser){
+                    console.log('this is founded user: ',foundUser)
                     user.value = foundUser
                     formFields.value.forEach(field => {
                         field.value = user.value[field.id]
                     });
+                    status.value = user.value.status
+                    console.log('this is status in userDetail: ',status.value)
+                    isFetched.value = true
                 }
             }
         )
-        return{user,formFields,multiRole,headerContent,buttonContent, selectInfo}
+        return{user,formFields,multiRole,headerContent,buttonContent, selectInfo,status, isFetched}
     }
 }
 </script>
