@@ -97,12 +97,43 @@ export default {
           }
         )
       }
+      else if (props.buttonContent === "Create"){
+        const jwtToken = localStorage.getItem('jwtToken');
+        const decodedToken = jwtDecode(jwtToken)
+        const userRole = decodedToken.role
+        const email = decodedToken.email
+        const action = "create"
+        const params = new URLSearchParams(myUrlEncoded);
+        params.append('role', userRole);
+        params.append('email', email);
+        params.append('action', action)
+        const updatedUrlEncoded = params.toString();
+
+        fetch('http://localhost:3000/createCustomer',{
+          method: "POST",
+          body: updatedUrlEncoded,
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${jwtToken}`
+          }
+        }).then(response => response.json()).then(
+          data => {
+            if (data.success){
+              alert(data.message)
+              document.getElementById("myForm").reset()
+              console.log(window.arcaptcha)
+              reset()
+            }else{
+              alert(data.message)
+            }
+          }
+        )
+      }
       else if(props.buttonContent === "Save"){
         const jwtToken = localStorage.getItem('jwtToken');
         const decodedToken = jwtDecode(jwtToken)
         const userRole = decodedToken.role
         const email = decodedToken.email
-        const date = new Date().toISOString()
         const action = "update"
         const params = new URLSearchParams(myUrlEncoded);
 
@@ -140,16 +171,16 @@ export default {
       else{
         const jwtToken = localStorage.getItem('jwtToken');
         const decodedToken = jwtDecode(jwtToken)
-        const role = decodedToken.role
+        const tokenRole = decodedToken.role
         const email = decodedToken.email
-        const date = new Date().toISOString()
-        const action = "update"
+        const action = "create"
+        const newUserRole = role.value
         const params = new URLSearchParams(myUrlEncoded);
 
         // Append additional fields
-        params.append('role', role);
-        params.append('email', email);
-        params.append('date', date);
+        params.append('role', tokenRole);
+        params.append('newUserRole', newUserRole);
+        params.append('tokenEmail', email);
         params.append('action', action)
         const updatedUrlEncoded = params.toString();
         fetch('http://localhost:3000/registerUser',{
