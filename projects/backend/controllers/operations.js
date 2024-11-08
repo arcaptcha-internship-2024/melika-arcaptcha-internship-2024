@@ -86,6 +86,7 @@ async function verifyUser(userData) {
 
 const saveUserData = async(req,res) => {
     const { v4: uuidv4 } = require('uuid'); 
+
     const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
     const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
     const filePath = './database/customers.json'
@@ -112,6 +113,32 @@ const saveUserData = async(req,res) => {
     }
 }
 
+const createCustomer = async(req,res) => {
+    const { v4: uuidv4 } = require('uuid'); 
+    
+    const {name, companyName, jobPosition, phoneNumber, explanation, role, email, action} = req.body
+
+    const filePath = './database/customers.json'
+    const uniqueId = uuidv4()
+    const createdDate = getTime()
+
+    const userData = {
+        id: uniqueId,
+        name,
+        companyName,
+        jobPosition,
+        phoneNumber,
+        explanation,
+        createdDate: createdDate,
+        lastUpdate: createdDate,
+        status: 'pending',
+        supervisorExplanation: ''
+    }
+    const dataArrString = await writeToFile(userData,filePath)
+    const logData = role + " " + email + " "+ action + " " + name + " data at " + createdDate
+    writeToFile(logData,'./database/logs.json')
+    res.send({success: true, message: 'Your form successfully submited!'})
+}
 
 const login = async (fastify, req, res) => {
     const {email, password,'arcaptcha-token':arcaptcha_token } = req.body
@@ -140,22 +167,22 @@ const login = async (fastify, req, res) => {
 
 
 const registerUser = async (fastify, req, res) => {
-    const {email, password,'arcaptcha-token':arcaptcha_token, role } = req.body
-    
-    const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
-    
-    if(isArcaptchaValid){
-        const userData = {
-            email,
-            password
-        }
-        const path = './database/users.json'
-        const dataArrString = await writeToFile(userData,path)
-        res.send({success: true, message: 'User successfully registered!'})
-        
-    }else{
-        res.send({success: false, message:'Verify You are a Human!'})
+    const { v4: uuidv4 } = require('uuid'); 
+    const {email, password, newUserRole,tokenEmail,action, role } = req.body
+    console.log('this is req body:',req.body)
+    const id = uuidv4()
+    const userData = {
+        id,
+        email,
+        password,
+        newUserRole
     }
+    const path = './database/users.json'
+    const dataArrString = await writeToFile(userData,path)
+    const date = getTime()
+    const logData = role + " " + tokenEmail + " "+ action + " " + newUserRole + " " + email + " data at " + date
+    writeToFile(logData,'./database/logs.json')
+    res.send({success: true, message: 'User successfully registered!'})
 }
 
 const getUsers = async(path,req,res) => {
@@ -233,9 +260,10 @@ const downloadUsers = async (request,reply) => {
 }
 
 const addLog = async(request, reply) => {
-    const {email, role, name, date, action } = request.body
+    const {email, role, name, action } = request.body
+    const date = getTime()
     const logData = role + " " + email + " "+ action + " " + name + " data at " + date
     writeToFile(logData,'./database/logs.json')
 
 }
-module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser,downloadUsers, addLog}
+module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser,downloadUsers, addLog,createCustomer}
