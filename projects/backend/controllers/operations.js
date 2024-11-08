@@ -1,6 +1,7 @@
 // const database = require('../database/user.json')
 const fs = require('fs').promises
 const axios = require('axios');
+const { stat } = require('fs');
 
 
 async function writeToFile(userData, filePath){
@@ -100,7 +101,7 @@ const saveUserData = async(req,res) => {
             explanation,
             createdDate: createdDate,
             lastUpdate: createdDate,
-            status: 'Pending',
+            status: 'pending',
             supervisorExplanation: ''
         }
         const dataArrString = await writeToFile(userData,filePath)
@@ -163,41 +164,32 @@ const getUsers = async(path,req,res) => {
 }
 
 const updateUser = async(req,res) => {
-
     const id = req.body.id
     console.log(req.body)
-    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token, role , email,action,date} = req.body
-    const logData = role[1] + " " + email + " "+ action + " " + name + " data at " + date
+    const {name, companyName, jobPosition, phoneNumber, explanation, role ,status, email, action,supervisorExplanation} = req.body
+    const date = getTime()
+    const logData = role + " " + email + " "+ action + " " + name + " data at " + date
     let databaseArray = []
     const filePath = './database/customers.json'
 
-    const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
-
-    if(isArcaptchaValid){
-        databaseArray = await readFromFile(filePath)
-        updatedDatabaseArray = databaseArray.map(user => {
-            if(user.id === id){
-                return{...user, name:name, companyName,companyName, jobPosition,jobPosition,phoneNumber,phoneNumber,explanation:explanation}
-            }else{
-                return user
-            }
-        })
-        const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
-        try {
-            await fs.writeFile(filePath,dataArrString)
-            console.log('file successfully written!')
-        } catch (err) {
-            console.log(err)
+    databaseArray = await readFromFile(filePath)
+    updatedDatabaseArray = databaseArray.map(user => {
+        if(user.id === id){
+            return{...user, name, companyName, jobPosition, phoneNumber, explanation, status, supervisorExplanation, lastUpdate:date}
+        }else{
+            return user
         }
-        res.send({success:true, message:'user successfully updated!'})
-        writeToFile(logData,'./database/logs.json')
-
+    })
+    
+    const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
+    try {
+        await fs.writeFile(filePath,dataArrString)
+        console.log('file successfully written!')
+    } catch (err) {
+        console.log(err)
     }
-    else {
-        res.send({success: false, message:'Verify You Are Human'})
-        console.log('form submission failed')
-    }
-
+    res.send({success:true, message:'user successfully updated!'})
+    writeToFile(logData,'./database/logs.json')
 }
 
 const deleteUser = async(req,res) => {
