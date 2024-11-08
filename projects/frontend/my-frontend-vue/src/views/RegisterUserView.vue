@@ -1,6 +1,6 @@
 <template>
     <div class="register-form">
-        <UserForm :buttonContent="buttonContent" :headerContent="headerContent" />
+        <UserForm :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="true"/>
     </div>
 </template>
 
@@ -14,6 +14,7 @@ export default {
     setup(){
         const headerContent = "Register User"
         const buttonContent = "Register"
+        
         return{headerContent, buttonContent}
     }
 }
