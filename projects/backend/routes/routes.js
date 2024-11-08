@@ -1,4 +1,4 @@
-const {saveUserData, downloadUsers, addLog} = require('../controllers/operations')
+const {saveUserData, downloadUsers, addLog, createCustomer} = require('../controllers/operations')
 const {login} = require('../controllers/operations')
 const {registerUser} = require('../controllers/operations')
 const {getUsers} = require('../controllers/operations')
@@ -9,6 +9,8 @@ const fs = require('fs');
 function routes(fastify,options,done){
     fastify.register(require('@fastify/formbody'));
     fastify.post('/upload',saveUserData)
+    fastify.post('/createCustomer',createCustomer)
+
     fastify.post('/login', async (request, reply) => {
         await login(fastify, request, reply);
     });
