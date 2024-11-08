@@ -1,18 +1,19 @@
 <template>
     <div class="user-form">
-        <MyForm :formFields="userFields" class="form-card" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :selectInfo="selectInfo"/>
+        <MyForm :formFields="userFields" class="form-card" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :selectInfo="selectInfo" :isCaptchaRequired="isCaptchaRequired"/>
     </div>
 </template>
 
 <script>
 import MyForm from '../components/MyForm.vue'
+import {ref} from 'vue'
 
 export default {
     name:'UserForm',
     components:{
         MyForm
     },
-    props:['headerContent','buttonContent','multiRole'],
+    props:['headerContent','buttonContent','multiRole','isCaptchaRequired'],
     setup(props){
         const userFields = [
             {id: "email", type: "email", rows: "", placeholder: "Your email", label: "Email: ", isRequired: true, fieldType:"input"},
@@ -20,7 +21,6 @@ export default {
         ]
         const headerContent = props.headerContent
         const buttonContent = props.buttonContent
-
         const selectInfo = {
             id:"role",
             label: "Select Role: ",

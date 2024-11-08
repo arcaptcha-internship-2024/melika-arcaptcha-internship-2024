@@ -1,6 +1,6 @@
 <template>
     <div class="login-form">
-        <UserForm :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="false" />
+        <UserForm :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="false" :isCaptchaRequired="true"/>
     </div>
 </template>
 

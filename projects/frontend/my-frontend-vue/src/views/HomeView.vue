@@ -6,7 +6,7 @@
     </router-link>
   </nav>
   <div class="home">
-    <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole"/>
+    <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :isCaptchaRequired="true"/>
   </div>
   </div>
 </template>

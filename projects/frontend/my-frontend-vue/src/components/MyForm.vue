@@ -11,8 +11,9 @@
     <div v-for="formField in formFields" :key="formField.id" class="form-field">
       <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType" :value="formField.value"/>
     </div>
-
-    <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8" ref="widget"></arcaptchaVue3>
+    <div v-if="isCaptchaRequired">
+      <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8" ref="widget"></arcaptchaVue3>
+    </div>
     <button type="submit">{{buttonContent}}</button>
   </form>
 </template>
@@ -30,12 +31,14 @@ export default {
     InputGroup,
     arcaptchaVue3,
   },
-  props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo','id'],
+  props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo','id','status', 'isCaptchaRequired'],
   setup(props){
     const widget = ref(null)
     const role = ref('default')
     const router = useRouter();
-
+    if(props.status){
+      role.value = props.status.toLowerCase()
+    }
     const reset = () => {
       if (widget.value) {
         widget.value.reset();
