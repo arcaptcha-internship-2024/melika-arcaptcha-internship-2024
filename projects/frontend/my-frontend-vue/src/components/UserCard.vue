@@ -60,7 +60,6 @@ export default {
           const role = decodedToken.role
           const email = decodedToken.email
           const name = props.user.name
-          const date = new Date().toISOString();
           // const action = "read"
 
           fetch("http://localhost:3000/addLogs", {
@@ -69,7 +68,7 @@ export default {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${jwtToken}`,
           },
-          body: JSON.stringify({ email, role, name, date, action }),
+          body: JSON.stringify({ email, role, name, action }),
         }); 
 
 

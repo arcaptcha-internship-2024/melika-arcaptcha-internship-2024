@@ -1,14 +1,14 @@
 <template>
     <div v-if="action === 'read'">
-        <h1>Name: {{user.name}}</h1>
+        <h2>Name: {{user.name}}</h2>
         <h2>Status: {{user.status}}</h2>
         <h2>Company Name: {{user.companyName}}</h2>
         <h2>Job Position: {{user.jobPosition}}</h2>
-        <h3>Phone Number: {{user.phoneNumber}}</h3>
-        <p>User Explanation: {{user.explanation}}</p>
-        <h3>Created Date: {{user.createdDate}}</h3>
-        <h3>Last Update: {{user.lastUpdate}}</h3>
-        <p>SupervisorExplanation: {{user.SupervisorExplanation}}</p>
+        <h2>Phone Number: {{user.phoneNumber}}</h2>
+        <h2>User Explanation: {{user.explanation}}</h2>
+        <h2>Created Date: {{user.createdDate}}</h2>
+        <h2>Last Update: {{user.lastUpdate}}</h2>
+        <h2>SupervisorExplanation: {{user.SupervisorExplanation}}</h2>
     </div>
     <div v-else>
         <div class="update-form" v-if="isFetched">

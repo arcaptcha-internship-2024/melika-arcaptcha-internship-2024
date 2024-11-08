@@ -20,7 +20,7 @@ export default {
         {id: "explanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Explanation: ", isRequired: true, fieldType:"textarea"}
         ]
         const headerContent = "Create Your Customer"
-        const buttonContent = "Submit"
+        const buttonContent = "Create"
         const multiRole = false
         
         return {formFields, headerContent,buttonContent, multiRole}
