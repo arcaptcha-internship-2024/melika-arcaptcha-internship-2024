@@ -52,7 +52,8 @@ const routes = [
     props:(route) =>{
       return {
           id: route.params.id,
-          action: route.query.action
+          action: route.query.action,
+          filePath: route.query.filePath
       };
     }
   },
