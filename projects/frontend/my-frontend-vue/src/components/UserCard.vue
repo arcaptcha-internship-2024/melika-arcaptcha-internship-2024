@@ -6,11 +6,11 @@
     <h1>{{user.name}}</h1>
     <p>{{user.companyName}}</p>
     <div class="actions">
-        <router-link class="no-style" :to="{name: 'userDetail', params: {id: user.id}, query: {action: 'read'}}">
+        <router-link class="no-style" :to="{name: 'userDetail', params: {id: user.id}, query: {action: 'read',filePath: filePath}}">
             <button class="action-button" @click="addLogs('read')">Read</button>
         </router-link>
         <button class="action-button" @click="deleteUser" v-if="deleteAccess">Delete</button>
-        <router-link class="no-style" :to="{name : 'userDetail', params:{id: user.id}, query:{action: 'update'}}">
+        <router-link class="no-style" :to="{name : 'userDetail', params:{id: user.id}, query:{action: 'update', filePath: filePath}}">
             <button class="action-button">Update</button>
         </router-link>
     </div>
@@ -28,6 +28,10 @@ export default {
         const deleteAccess = ref(false)
         if(props.role === 'admin'){
             deleteAccess.value = true
+        }
+        const filePath = ref('./database/customers.json')
+        if(props.user.email){
+          filePath.value = './database/users.json'
         }
         const deleteUser = async()=>{
           const jwtToken = localStorage.getItem('jwtToken');
@@ -73,7 +77,7 @@ export default {
 
 
         }
-        return {deleteAccess, deleteUser, addLogs}
+        return {deleteAccess, deleteUser, addLogs, filePath}
     }
 }
 </script>
