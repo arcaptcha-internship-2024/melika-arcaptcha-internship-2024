@@ -9,12 +9,15 @@
     </div>
 
     <div v-for="formField in formFields" :key="formField.id" class="form-field">
-      <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType" :value="formField.value"/>
+      <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType" :value="formField.value" :isDisabled="formField.isDisabled"/>
     </div>
     <div v-if="isCaptchaRequired">
       <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8" ref="widget"></arcaptchaVue3>
     </div>
-    <button type="submit">{{buttonContent}}</button>
+    <div v-if="buttonContent">
+      <button type="submit">{{buttonContent}}</button>
+    </div>
+    
   </form>
 </template>
 
@@ -141,7 +144,6 @@ export default {
         params.append('status',role.value)
         params.append('role', userRole);
         params.append('email', email);
-        params.append('date', date);
         params.append('action', action)
         const updatedUrlEncoded = params.toString();
         fetch('http://localhost:3000/updateUser',{
