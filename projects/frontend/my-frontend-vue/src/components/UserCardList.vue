@@ -35,11 +35,12 @@ export default {
         const users = ref([])
         const role = ref('')
         const jwtToken = localStorage.getItem('jwtToken');
-        fetch(props.path,{
+        fetch('http://localhost:3000/getUsers',{
             method:"GET",
             headers: {
             'Content-type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${jwtToken}`
+            'Authorization': `Bearer ${jwtToken}`,
+            'X-File-Path': props.path
             }
         }).then(response => response.json()).then(
             data => {
