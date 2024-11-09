@@ -1,14 +1,8 @@
 <template>
     <div v-if="action === 'read'">
-        <h2>Name: {{user.name}}</h2>
-        <h2>Status: {{user.status}}</h2>
-        <h2>Company Name: {{user.companyName}}</h2>
-        <h2>Job Position: {{user.jobPosition}}</h2>
-        <h2>Phone Number: {{user.phoneNumber}}</h2>
-        <h2>User Explanation: {{user.explanation}}</h2>
-        <h2>Created Date: {{user.createdDate}}</h2>
-        <h2>Last Update: {{user.lastUpdate}}</h2>
-        <h2>SupervisorExplanation: {{user.SupervisorExplanation}}</h2>
+        <div class="update-form" v-if="isFetched">
+            <MyForm :formFields="formFields" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo" :status="status"/>
+        </div>
     </div>
     <div v-else>
         <div class="update-form" v-if="isFetched">
@@ -21,25 +15,32 @@
 import { ref } from 'vue'
 import MyForm from '../components/MyForm.vue'
 export default {
-    props:['id','action'],
+    props:['id','action','filePath'],
     components:{MyForm},
     setup(props){
         const isFetched = ref(false)
+        const isDisabled = ref(false)
+        let headerContent = "Update Info"
+
+        if(props.action === 'read'){
+            isDisabled.value = true
+            headerContent = "Read Info"
+        }
+        
         const formFields = ref([
-            { id: "name", type: "text", rows: "", placeholder: "Your full name", label: "Name: ", isRequired: true, fieldType: "input", value: "" },
-            { id: "companyName", type: "text", rows: "", placeholder: "Company you work for", label: "Company Name: ", isRequired: true, fieldType: "input", value: "" },
-            { id: "jobPosition", type: "text", rows: "", placeholder: "Your job position", label: "Job Position: ", isRequired: true, fieldType: "input", value: "" },
-            { id: "phoneNumber", type: "tel", rows: "", placeholder: "Your phone number", label: "Phone Number: ", isRequired: true, fieldType: "input", value: "" },
-            { id: "createdDate", type: "text", rows: "", placeholder: "Created Date", label: "Created Date: ", isRequired: true, fieldType: "input", value: "" },
-            { id: "lastUpdate", type: "text", rows: "", placeholder: "Last update", label: "Last Update: ", isRequired: true, fieldType: "input", value: "" },
-            { id: "explanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Customer Explanation: ", isRequired: true, fieldType: "textarea", value: "" },
-            { id: "supervisorExplanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Supervisor Explanation: ", isRequired: true, fieldType: "textarea", value: "" },
+            { id: "name", type: "text", rows: "", placeholder: "Your full name", label: "Name: ", isRequired: true, fieldType: "input", value: "",isDisabled:isDisabled },
+            { id: "companyName", type: "text", rows: "", placeholder: "Company you work for", label: "Company Name: ", isRequired: true, fieldType: "input", value: "",isDisabled:isDisabled },
+            { id: "jobPosition", type: "text", rows: "", placeholder: "Your job position", label: "Job Position: ", isRequired: true, fieldType: "input", value: "",isDisabled:isDisabled },
+            { id: "phoneNumber", type: "tel", rows: "", placeholder: "Your phone number", label: "Phone Number: ", isRequired: true, fieldType: "input", value: "",isDisabled:isDisabled },
+            { id: "createdDate", type: "text", rows: "", placeholder: "Created Date", label: "Created Date: ", isRequired: true, fieldType: "input", value: "",isDisabled:isDisabled },
+            { id: "lastUpdate", type: "text", rows: "", placeholder: "Last update", label: "Last Update: ", isRequired: true, fieldType: "input", value: "",isDisabled:isDisabled },
+            { id: "explanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Customer Explanation: ", isRequired: true, fieldType: "textarea", value: "",isDisabled:isDisabled },
+            { id: "supervisorExplanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Supervisor Explanation: ", isRequired: true, fieldType: "textarea", value: "",isDisabled:isDisabled },
             
         ]);
-        const headerContent = "Update Info"
         const buttonContent = "Save"
         const multiRole = true
-        const selectInfo = {
+        let selectInfo = {
             id:"status",
             label: "Select Status: ",
             options: [
@@ -56,7 +57,8 @@ export default {
             method:"GET",
             headers: {
             'Content-type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${jwtToken}`
+            'Authorization': `Bearer ${jwtToken}`,
+            'X-File-Path': props.filePath
             }
         }).then(response => response.json()).then(
             data => {
