@@ -175,7 +175,7 @@ const registerUser = async (fastify, req, res) => {
         id,
         email,
         password,
-        newUserRole
+        role:newUserRole
     }
     const path = './database/users.json'
     const dataArrString = await writeToFile(userData,path)
@@ -185,7 +185,8 @@ const registerUser = async (fastify, req, res) => {
     res.send({success: true, message: 'User successfully registered!'})
 }
 
-const getUsers = async(path,req,res) => {
+const getUsers = async(req,res) => {
+    const path = req.headers['x-file-path']
     const users = await readFromFile(path)
     res.send(users)
 }
@@ -239,21 +240,18 @@ const deleteUser = async(req,res) => {
 }
 
 const downloadUsers = async (request,reply) => {
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    const fs = require('fs');
     try {
-        const filePath = '../database/customers.json'
-        // Check if the file exists
+        const filePath = './database/customers.json';
+
         if (fs.existsSync(filePath)) {
-            console.log('downloadddddd!!!!!!!!!!!!!!!!!!!!')
             reply.header('Content-Disposition', 'attachment; filename="customers.json"');
             reply.header('Content-Type', 'application/json');
             return reply.send(fs.createReadStream(filePath));
         } else {
-            console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
             reply.code(404).send({ error: 'File not found' });
         }
     } catch (error) {
-        console.log("********************************")
         request.log.error(error);
         reply.code(500).send({ error: 'Internal Server Error' });
     }
