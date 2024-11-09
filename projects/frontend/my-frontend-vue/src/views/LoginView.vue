@@ -12,6 +12,7 @@ export default {
         UserForm
     },
     setup(){
+        localStorage.removeItem('jwtToken')
         const headerContent = "Login to Your Account"
         const buttonContent = "Login"
         return{headerContent, buttonContent}
