@@ -56,7 +56,6 @@ export default {
         }
 
         const downloadUsers = async () => {
-            console.log('ajshdflkahfdhslkdhfj;ashdf;ahsdf;jas;dfkja;sldjkf')
             fetch('http://localhost:3000/downloadUsersList',{
                 method:"GET",
                 headers: {
