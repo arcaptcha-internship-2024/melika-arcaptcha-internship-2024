@@ -1,27 +1,29 @@
 <template>
-  <nav class="nav-container">
-    <router-link :to="{name: 'registerUser'}" class="registerUser-link">
-      <button class="registerUser-button">Register User</button>
-    </router-link>
-    <button class="toggle-button" @click="toggle('users')">Users</button>
-    <button class="toggle-button" @click="toggle('showSalesManagers')">Sales Managers</button>
-    <router-link :to="{name: 'Logs'}">
-      <button class="register-button">View Logs</button>
-    </router-link>
+  <div>
+    <nav class="nav-container">
+      <router-link :to="{name: 'registerUser'}" class="registerUser-link">
+        <button class="registerUser-button">Register User</button>
+      </router-link>
+      <button class="toggle-button" @click="toggle('users')">Users</button>
+      <button class="toggle-button" @click="toggle('showSalesManagers')">Sales Managers</button>
+      <router-link :to="{name: 'Logs'}">
+        <button class="register-button">View Logs</button>
+      </router-link>
 
-    <button class="my-logout" @click="logout">Log Out</button>
+      <button class="my-logout" @click="logout">Log Out</button>
 
-  </nav>
-  <div class="create">
-    <router-link class="no-style" :to="{name: 'create'}">
-      <button class="create-button">Create</button> 
-    </router-link>
-  </div>
-  <div v-if="showSalesManagers">
-    <UserCardList :path="salesManagersPath" :isSalesManager="true" :role="role"/>
-  </div>
-  <div v-if="showUsers">
-    <UserCardList :path="usersPath" :isSalesManager="false" :role="role"/>
+    </nav>
+    <div class="create">
+      <router-link class="no-style" :to="{name: 'create'}">
+        <button class="create-button">Create</button> 
+      </router-link>
+    </div>
+    <div v-if="showSalesManagers">
+      <UserCardList :path="salesManagersPath" :isSalesManager="true" :role="role"/>
+    </div>
+    <div v-if="showUsers">
+      <UserCardList :path="usersPath" :isSalesManager="false" :role="role"/>
+    </div>
   </div>
 </template>
 
