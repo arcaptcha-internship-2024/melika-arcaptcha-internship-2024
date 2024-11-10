@@ -2,7 +2,7 @@
   <div class="user-card">
     <h1>{{user.email}}</h1>
     <h2>{{user.role}}</h2>
-    <p>{{user.password}}</p>
+
     <h1>{{user.name}}</h1>
     <p>{{user.companyName}}</p>
     <div class="actions">
@@ -36,12 +36,17 @@ export default {
         const deleteUser = async()=>{
           const jwtToken = localStorage.getItem('jwtToken');
           console.log(JSON.stringify({ id: props.user.id }))
+          let filePath = './database/customers.json'
           addLogs('delete')
+          if(props.user.email){
+            filePath = './database/users.json'
+          }
           fetch('http://localhost:3000/deleteUser',{
             method: "DELETE",
             headers: {
             'Content-Type': 'application/json', // Send as JSON
-            'Authorization': `Bearer ${jwtToken}`, // Include token for authentication
+            'Authorization': `Bearer ${jwtToken}`, 
+            'x-file-path': filePath// Include token for authentication
           },
           body: JSON.stringify({ id: props.user.id }),
           }).then(response => response.json()).then(
@@ -63,7 +68,11 @@ export default {
           const decodedToken = jwtDecode(jwtToken);
           const role = decodedToken.role
           const email = decodedToken.email
-          const name = props.user.name
+    
+          let name = props.user.name
+          if(props.user.email){
+            name = props.user.email
+          }
           // const action = "read"
 
           fetch("http://localhost:3000/addLogs", {

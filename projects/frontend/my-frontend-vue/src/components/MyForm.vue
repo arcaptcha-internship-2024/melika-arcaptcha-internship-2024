@@ -39,6 +39,7 @@ export default {
     const widget = ref(null)
     const role = ref('default')
     const router = useRouter();
+    
     if(props.status){
       role.value = props.status.toLowerCase()
     }
