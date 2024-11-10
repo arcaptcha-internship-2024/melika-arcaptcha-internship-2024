@@ -1,12 +1,18 @@
 <template>
     <div v-if="action === 'read'">
-        <div class="update-form" v-if="isFetched">
+        <div class="update-form" v-if="isFetched && isCustomer" >
             <MyForm :formFields="formFields" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo" :status="status"/>
+        </div>
+        <div class="update-form" v-if="isFetched && !isCustomer">
+            <UserForm :headerContent="'Read'" :foundUser="user" :multiRole="true" :isDisabled="true"/>
         </div>
     </div>
     <div v-else>
-        <div class="update-form" v-if="isFetched">
+        <div class="update-form" v-if="isFetched && isCustomer">
             <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo" :status="status"/>
+        </div>
+        <div class="update-form" v-if="isFetched && !isCustomer">
+            <UserForm :buttonContent="'Save'" :headerContent="'Update'" :foundUser="user" :multiRole="true" :isDisabled="false" :id="user.id"/>
         </div>
     </div>
 </template>
@@ -14,14 +20,19 @@
 <script>
 import { ref } from 'vue'
 import MyForm from '../components/MyForm.vue'
+import UserForm from '../components/UserForm.vue'
+
 export default {
     props:['id','action','filePath'],
-    components:{MyForm},
+    components:{MyForm, UserForm},
     setup(props){
         const isFetched = ref(false)
         const isDisabled = ref(false)
         let headerContent = "Update Info"
-
+        const isCustomer = ref(true)
+        if(props.filePath === './database/users.json'){
+            isCustomer.value = false
+        }
         if(props.action === 'read'){
             isDisabled.value = true
             headerContent = "Read Info"
@@ -65,7 +76,6 @@ export default {
                 users.value = data
                 const foundUser = users.value.find(user => user.id === props.id)
                 if(foundUser){
-                    console.log('this is founded user: ',foundUser)
                     user.value = foundUser
                     formFields.value.forEach(field => {
                         field.value = user.value[field.id]
@@ -76,7 +86,7 @@ export default {
                 }
             }
         )
-        return{user,formFields,multiRole,headerContent,buttonContent, selectInfo,status, isFetched}
+        return{user,formFields,multiRole,headerContent,buttonContent, selectInfo,status, isFetched, isCustomer}
     }
 }
 </script>
