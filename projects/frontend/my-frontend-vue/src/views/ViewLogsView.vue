@@ -19,7 +19,8 @@ export default {
             method:"GET",
             headers: {
             'Content-type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${jwtToken}`
+            'Authorization': `Bearer ${jwtToken}`,
+            'x-file-path':'./database/logs.json'
             }
         }).then(response => response.json()).then(
             data => {
