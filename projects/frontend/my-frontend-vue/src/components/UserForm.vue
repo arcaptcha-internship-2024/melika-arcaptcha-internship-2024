@@ -1,6 +1,6 @@
 <template>
     <div class="user-form">
-        <MyForm :formFields="userFields" class="form-card" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :selectInfo="selectInfo" :isCaptchaRequired="isCaptchaRequired"/>
+        <MyForm :formFields="userFields" class="form-card" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :selectInfo="selectInfo" :isCaptchaRequired="isCaptchaRequired" :status="role" :id="id"/>
     </div>
 </template>
 
@@ -13,12 +13,14 @@ export default {
     components:{
         MyForm
     },
-    props:['headerContent','buttonContent','multiRole','isCaptchaRequired'],
+    props:['headerContent','buttonContent','multiRole','isCaptchaRequired','foundUser','isDisabled','id'],
     setup(props){
-        const userFields = [
-            {id: "email", type: "email", rows: "", placeholder: "Your email", label: "Email: ", isRequired: true, fieldType:"input"},
-            {id: "password", type: "password", rows: "", placeholder: "Your password", label: "Password: ", isRequired: true, fieldType:"input"},
-        ]
+        const role = ref('default')
+
+        const userFields = ref([
+            {id: "email", type: "email", rows: "", placeholder: "Your email", label: "Email: ", isRequired: true, fieldType:"input", value:"",isDisabled:false},
+            {id: "password", type: "password", rows: "", placeholder: "Your password", label: "Password: ", isRequired: true, fieldType:"input", value:"", isDisabled:false},
+        ])
         const headerContent = props.headerContent
         const buttonContent = props.buttonContent
         const selectInfo = {
@@ -30,7 +32,17 @@ export default {
                 {value: "sales_manager",content: "Sales Manager", isDisabled: false}
             ]
         }
-        return {userFields, headerContent, buttonContent, selectInfo}
+
+         if (props.foundUser) {
+            userFields.value[1].type = "text"
+            userFields.value.forEach(field => {
+                field.value = props.foundUser[field.id]
+                field.isDisabled = props.isDisabled
+            });
+            role.value = props.foundUser.role
+        }
+        console.log(userFields)
+        return {userFields, headerContent, buttonContent, selectInfo,role}
     }
 }
 </script>
@@ -38,5 +50,7 @@ export default {
 <style>
 .user-form{
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>
