@@ -194,15 +194,26 @@ const getUsers = async(req,res) => {
 const updateUser = async(req,res) => {
     const id = req.body.id
     console.log(req.body)
+    const password = req.body.password
+    if(password){
+
+    }
     const {name, companyName, jobPosition, phoneNumber, explanation, role ,status, email, action,supervisorExplanation} = req.body
     const date = getTime()
-    const logData = role + " " + email + " "+ action + " " + name + " data at " + date
+    let logData = role + " " + email + " "+ action + " " + name + " data at " + date
     let databaseArray = []
-    const filePath = './database/customers.json'
-
+    let filePath = './database/customers.json'
+    if(password){
+        filePath = './database/users.json'
+        logData = role + " " + email[1] + " "+ action + " " + email[0] + " data at " + date
+    }
     databaseArray = await readFromFile(filePath)
     updatedDatabaseArray = databaseArray.map(user => {
         if(user.id === id){
+            if(password){
+                return{...user, email:email[0], password, role:status}
+
+            }
             return{...user, name, companyName, jobPosition, phoneNumber, explanation, status, supervisorExplanation, lastUpdate:date}
         }else{
             return user
@@ -221,7 +232,7 @@ const updateUser = async(req,res) => {
 }
 
 const deleteUser = async(req,res) => {
-    const filePath = './database/customers.json'
+    const filePath = req.headers['x-file-path']
 
     const id = req.body.id
 
@@ -242,7 +253,7 @@ const deleteUser = async(req,res) => {
 const downloadUsers = async (request,reply) => {
     const fs = require('fs');
     try {
-        const filePath = './database/customers.json';
+        const filePath = request.headers['x-file-path']
 
         if (fs.existsSync(filePath)) {
             reply.header('Content-Disposition', 'attachment; filename="customers.json"');
