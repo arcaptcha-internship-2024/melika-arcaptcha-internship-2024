@@ -1,9 +1,9 @@
 [
   {
     "id": "1",
-    "email": "javaddd@j.com",
+    "email": "javaddd@j.comm",
     "password": "11ljffsdaf",
-    "role": "admin"
+    "role": "sales_manager"
   },
   {
     "id": "2",
@@ -24,21 +24,9 @@
     "role": "sales_manager"
   },
   {
-    "id": "9c8fa725-dbb6-41bf-98dd-2cc8feb72356",
-    "email": "ha@m.co",
-    "password": "kajsdf",
-    "newUserRole": "sales_manager"
-  },
-  {
-    "id": "2bc1fcd4-8f6d-42c8-9c6b-7d03f34bad46",
-    "email": "meli@g.c",
-    "password": "ajdfh",
-    "newUserRole": "admin"
-  },
-  {
-    "id": "cad7386f-8e35-43a8-95c0-4021f5458225",
-    "email": "me@g.c",
-    "password": "kjsdsfad",
-    "role": "sales_manager"
+    "id": "e681919b-cd25-4fb2-a4c4-9f5f79e5fcb0",
+    "email": "ghazal@g.c",
+    "password": "hihihihijihskd",
+    "role": "admin"
   }
 ]
