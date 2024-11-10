@@ -32,7 +32,7 @@ function routes(fastify,options,done){
     fastify.get('/downloadUsersList', downloadUsers);
     fastify.post('/addLogs',addLog)
     fastify.get('/getLogs', async (request, reply) => {
-        await getUsers('./database/logs.json', request, reply);
+        await getUsers(request, reply);
     });
     done()
 }
