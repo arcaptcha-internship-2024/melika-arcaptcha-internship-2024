@@ -56,11 +56,16 @@ export default {
         }
 
         const downloadUsers = async () => {
+            let listPath = './database/customers.json'
+            if(props.isSalesManager){
+                listPath = './database/users.json'
+            }
             fetch('http://localhost:3000/downloadUsersList',{
                 method:"GET",
                 headers: {
                 'Content-type': 'application/x-www-form-urlencoded',
-                'Authorization': `Bearer ${jwtToken}`
+                'Authorization': `Bearer ${jwtToken}`,
+                'x-file-path': listPath
                 }
             }).then(response => {
                 if (!response.ok) {
