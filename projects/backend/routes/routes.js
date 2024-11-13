@@ -1,37 +1,32 @@
-const {saveUserData, downloadUsers, addLog, createCustomer} = require('../controllers/operations')
-const {login} = require('../controllers/operations')
-const {registerUser} = require('../controllers/operations')
-const {getUsers} = require('../controllers/operations')
-const {updateUser} = require('../controllers/operations')
-const {deleteUser} = require('../controllers/operations')
-const fs = require('fs');
+const {saveUserData,
+       downloadUsers,
+       addLog, 
+       createCustomer, 
+       login, 
+       registerUser, 
+       getUsers, 
+       updateUser, 
+       deleteUser} = require('../controllers/operations')
+
 
 function routes(fastify,options,done){
     fastify.register(require('@fastify/formbody'));
-    fastify.post('/upload',saveUserData)
-    fastify.post('/createCustomer',createCustomer)
-
-    fastify.post('/login', async (request, reply) => {
+    fastify.post('/api/customer/submit',saveUserData)
+    fastify.post('/api/customer/add',createCustomer)
+    fastify.post('/api/login', async (request, reply) => {
         await login(fastify, request, reply);
     });
-    fastify.post('/registerUser', async (request, reply) => {
+    fastify.post('/api/operator/add', async (request, reply) => {
         await registerUser(fastify, request, reply);
     });
-
-    // fastify.get('/getSalesManagers', async (request, reply) => {
-    //     await getUsers('./database/users.json', request, reply);
-    // });
-    fastify.get('/getUsers', async (request, reply) => {
+    fastify.get('/api/users/get', async (request, reply) => {
         await getUsers(request, reply);
     });
-    fastify.post('/updateUser',updateUser)
-    fastify.delete('/deleteUser', deleteUser)
-    // fastify.get('/downloadUsersList', async (request,reply) =>{
-    //     await downloadUsers(request, reply)
-    // })
-    fastify.get('/downloadUsersList', downloadUsers);
-    fastify.post('/addLogs',addLog)
-    fastify.get('/getLogs', async (request, reply) => {
+    fastify.post('/api/user/update',updateUser)
+    fastify.delete('/api/user/delete', deleteUser)
+    fastify.get('/api/users/download', downloadUsers);
+    fastify.post('/api/logs/add',addLog)
+    fastify.get('/api/logs/get', async (request, reply) => {
         await getUsers(request, reply);
     });
     done()

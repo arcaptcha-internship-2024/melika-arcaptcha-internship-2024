@@ -35,7 +35,7 @@ export default {
         const users = ref([])
         const role = ref('')
         const jwtToken = localStorage.getItem('jwtToken');
-        fetch('http://localhost:3000/getUsers',{
+        fetch('http://localhost:3000/api/users/get',{
             method:"GET",
             headers: {
             'Content-type': 'application/x-www-form-urlencoded',
@@ -60,7 +60,7 @@ export default {
             if(props.isSalesManager){
                 listPath = './database/users.json'
             }
-            fetch('http://localhost:3000/downloadUsersList',{
+            fetch('http://localhost:3000/api/users/download',{
                 method:"GET",
                 headers: {
                 'Content-type': 'application/x-www-form-urlencoded',

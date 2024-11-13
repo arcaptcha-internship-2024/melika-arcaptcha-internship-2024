@@ -15,7 +15,7 @@ export default {
         const length = ref(0)
         
         const jwtToken = localStorage.getItem('jwtToken');
-        fetch('http://localhost:3000/getLogs',{
+        fetch('http://localhost:3000/api/logs/get',{
             method:"GET",
             headers: {
             'Content-type': 'application/x-www-form-urlencoded',

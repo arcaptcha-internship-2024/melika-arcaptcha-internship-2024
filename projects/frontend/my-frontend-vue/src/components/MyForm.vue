@@ -7,7 +7,6 @@
         <option v-for="option in selectInfo.options" :key="option.value" :value="option.value" :disabled="option.isDisabled">{{option.content}}</option>
       </select>
     </div>
-
     <div v-for="formField in formFields" :key="formField.id" class="form-field">
       <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType" :value="formField.value" :isDisabled="formField.isDisabled"/>
     </div>
@@ -56,7 +55,7 @@ export default {
       formData.append('id', props.id )
       const myUrlEncoded = new URLSearchParams(formData).toString();
       if(props.buttonContent === "Login"){
-        fetch('http://localhost:3000/login',{
+        fetch('http://localhost:3000/api/login',{
           method:"POST",
           body: urlEncoded,
           headers: {
@@ -82,7 +81,7 @@ export default {
         )
       }
       else if (props.buttonContent === "Submit"){
-        fetch('http://localhost:3000/upload',{
+        fetch('http://localhost:3000/api/customer/submit',{
           method: "POST",
           body: urlEncoded,
           headers: {
@@ -113,7 +112,7 @@ export default {
         params.append('action', action)
         const updatedUrlEncoded = params.toString();
 
-        fetch('http://localhost:3000/createCustomer',{
+        fetch('http://localhost:3000/api/customer/add',{
           method: "POST",
           body: updatedUrlEncoded,
           headers: {
@@ -147,7 +146,7 @@ export default {
         params.append('email', email);
         params.append('action', action)
         const updatedUrlEncoded = params.toString();
-        fetch('http://localhost:3000/updateUser',{
+        fetch('http://localhost:3000/api/user/update',{
           method:"POST",
           body: updatedUrlEncoded,
           headers: {
@@ -186,7 +185,7 @@ export default {
         params.append('tokenEmail', email);
         params.append('action', action)
         const updatedUrlEncoded = params.toString();
-        fetch('http://localhost:3000/registerUser',{
+        fetch('http://localhost:3000/api/operator/add',{
           method:"POST",
           body: updatedUrlEncoded,
           headers: {

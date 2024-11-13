@@ -26,7 +26,7 @@ export default {
   setup(){
     const role = ref('sales_manager')
     const showUsers = ref(false)
-    const usersPath = ref('http://localhost:3000/getUsers')
+    const usersPath = ref('http://localhost:3000/api/users/get')
     const toggle = () => {
       showUsers.value = !showUsers.value
     }

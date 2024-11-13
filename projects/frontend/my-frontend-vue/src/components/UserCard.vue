@@ -41,7 +41,7 @@ export default {
           if(props.user.email){
             filePath = './database/users.json'
           }
-          fetch('http://localhost:3000/deleteUser',{
+          fetch('http://localhost:3000/api/user/delete',{
             method: "DELETE",
             headers: {
             'Content-Type': 'application/json', // Send as JSON
@@ -75,7 +75,7 @@ export default {
           }
           // const action = "read"
 
-          fetch("http://localhost:3000/addLogs", {
+          fetch("http://localhost:3000/api/logs/add", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

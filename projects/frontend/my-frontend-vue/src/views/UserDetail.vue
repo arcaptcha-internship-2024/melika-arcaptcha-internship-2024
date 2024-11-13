@@ -64,7 +64,7 @@ export default {
         const user = ref({})
         const users = ref([])
         const status = ref('')
-        fetch('http://localhost:3000/getUsers',{
+        fetch('http://localhost:3000/api/users/get',{
             method:"GET",
             headers: {
             'Content-type': 'application/x-www-form-urlencoded',

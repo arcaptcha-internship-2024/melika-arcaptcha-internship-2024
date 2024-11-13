@@ -1,6 +1,6 @@
 module.exports = (fastify) => {
 	fastify.addHook("preHandler", async (req, res) => {
-		if (req.url != "/login" && req.url != "/upload") {
+		if (req.url != "/api/login" && req.url != "/api/customer/submit") {
 			await req.jwtVerify()
 				.then((data) => {
 					req.userData = data;
