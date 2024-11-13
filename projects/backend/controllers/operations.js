@@ -86,26 +86,22 @@ async function verifyUser(userData) {
 
 const saveUserData = async(req,res) => {
     const { v4: uuidv4 } = require('uuid'); 
-
-    const {name, companyName, jobPosition, phoneNumber, explanation,'arcaptcha-token':arcaptcha_token} = req.body
+    const {'arcaptcha-token':arcaptcha_token} = req.body
     const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
     const filePath = './database/customers.json'
     const uniqueId = uuidv4()
     const createdDate = getTime()
+    const { 'arcaptcha-token': _, ...customerData } = req.body;
     if (isArcaptchaValid) {
         const userData = {
             id: uniqueId,
-            name,
-            companyName,
-            jobPosition,
-            phoneNumber,
-            explanation,
+            ...customerData,
             createdDate: createdDate,
             lastUpdate: createdDate,
             status: 'pending',
             supervisorExplanation: ''
         }
-        const dataArrString = await writeToFile(userData,filePath)
+        writeToFile(userData,filePath)
         res.send({success: true, message: 'Your form successfully submited!'})
     } else {
         res.send({success: false, message:'Verify You Are Human'})
@@ -116,25 +112,21 @@ const saveUserData = async(req,res) => {
 const createCustomer = async(req,res) => {
     const { v4: uuidv4 } = require('uuid'); 
     
-    const {name, companyName, jobPosition, phoneNumber, explanation, role, email, action} = req.body
-
     const filePath = './database/customers.json'
     const uniqueId = uuidv4()
     const createdDate = getTime()
+    const { role, email, action, id, ...customerData } = req.body;
+    const {name} = req.body
 
     const userData = {
         id: uniqueId,
-        name,
-        companyName,
-        jobPosition,
-        phoneNumber,
-        explanation,
+        ...customerData,
         createdDate: createdDate,
         lastUpdate: createdDate,
         status: 'pending',
         supervisorExplanation: ''
     }
-    const dataArrString = await writeToFile(userData,filePath)
+    writeToFile(userData,filePath)
     const logData = role + " " + email + " "+ action + " " + name + " data at " + createdDate
     writeToFile(logData,'./database/logs.json')
     res.send({success: true, message: 'Your form successfully submited!'})
@@ -195,9 +187,7 @@ const updateUser = async(req,res) => {
     const id = req.body.id
     console.log(req.body)
     const password = req.body.password
-    if(password){
-
-    }
+    
     const {name, companyName, jobPosition, phoneNumber, explanation, role ,status, email, action,supervisorExplanation} = req.body
     const date = getTime()
     let logData = role + " " + email + " "+ action + " " + name + " data at " + date
