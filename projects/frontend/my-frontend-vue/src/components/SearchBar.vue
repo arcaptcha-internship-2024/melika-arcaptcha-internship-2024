@@ -16,9 +16,9 @@
 
       <select @change="emitFilters" v-model="filters.status">
         <option value="">All Statuses</option>
-        <option value="Pending">Pending</option>
-        <option value="Approved">Approved</option>
-        <option value="Rejected">Rejected</option>
+        <option value="pending">Pending</option>
+        <option value="processing">Processing</option>
+        <option value="processed">Processed</option>
       </select>
     </div>
 </template>
