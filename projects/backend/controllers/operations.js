@@ -2,25 +2,7 @@
 const fs = require('fs').promises
 const axios = require('axios');
 const { stat } = require('fs');
-
-
-async function writeToFile(userData, filePath){
-    let databaseArray = []
-    databaseArray = await readFromFile(filePath)
-
-    databaseArray.push(userData)
-    //adding null and 2 makes the json file more readable
-    const dataArrString = JSON.stringify(databaseArray,null,2)
-
-    try {
-        await fs.writeFile(filePath,dataArrString)
-        console.log('file successfully written!')
-    } catch (err) {
-        console.log(err)
-    }
-    
-    return dataArrString
-}
+const fileOperations = require('./fileOperations');
 
 
 function getTime(){
@@ -36,23 +18,9 @@ function getTime(){
 }
 
 
-async function readFromFile(filePath){
-    let databaseArray = []
-    try {
-        const stringDatabase = await fs.readFile(filePath,'utf-8')
-        if(stringDatabase){
-            databaseArray = JSON.parse(stringDatabase)
-        } 
-    } catch (err) {
-        console.log(`file doesn't exist!`)
-    }
-    return databaseArray
-}
-
-
 async function verifyUser(userData) {
     const filePath = './database/users.json'
-    const databaseArray = await readFromFile(filePath)
+    const databaseArray = await fileOperations.readFromFile(filePath)
     let result = {success: false, message: `Wrong Username or Password!`, userRole:''}
 
     for(const user of databaseArray){
@@ -83,7 +51,7 @@ const saveUserData = async(req,res) => {
         status: 'pending',
         supervisorExplanation: ''
     }
-    writeToFile(userData,filePath)
+    fileOperations.writeToFile(userData,filePath)
     res.send({success: true, message: 'Your form successfully submited!'})
     
 }
@@ -105,9 +73,9 @@ const createCustomer = async(req,res) => {
         status: 'pending',
         supervisorExplanation: ''
     }
-    writeToFile(userData,filePath)
+    fileOperations.writeToFile(userData,filePath)
     const logData = role + " " + email + " "+ action + " " + name + " data at " + createdDate
-    writeToFile(logData,'./database/logs.json')
+    fileOperations.writeToFile(logData,'./database/logs.json')
     res.send({success: true, message: 'Your form successfully submited!'})
 }
 
@@ -145,16 +113,16 @@ const registerUser = async (fastify, req, res) => {
         role:newUserRole
     }
     const path = './database/users.json'
-    const dataArrString = await writeToFile(userData,path)
+    fileOperations.writeToFile(userData,path)
     const date = getTime()
     const logData = role + " " + tokenEmail + " "+ action + " " + newUserRole + " " + email + " data at " + date
-    writeToFile(logData,'./database/logs.json')
+    fileOperations.writeToFile(logData,'./database/logs.json')
     res.send({success: true, message: 'User successfully registered!'})
 }
 
 const getUsers = async(req,res) => {
     const path = req.headers['x-file-path']
-    const users = await readFromFile(path)
+    const users = await fileOperations.readFromFile(path)
     res.send(users)
 }
 
@@ -172,7 +140,7 @@ const updateUser = async(req,res) => {
         filePath = './database/users.json'
         logData = role + " " + email[1] + " "+ action + " " + email[0] + " data at " + date
     }
-    databaseArray = await readFromFile(filePath)
+    databaseArray = await fileOperations.readFromFile(filePath)
     updatedDatabaseArray = databaseArray.map(user => {
         if(user.id === id){
             if(password){
@@ -193,7 +161,7 @@ const updateUser = async(req,res) => {
         console.log(err)
     }
     res.send({success:true, message:'user successfully updated!'})
-    writeToFile(logData,'./database/logs.json')
+    fileOperations.writeToFile(logData,'./database/logs.json')
 }
 
 const deleteUser = async(req,res) => {
@@ -202,7 +170,7 @@ const deleteUser = async(req,res) => {
     const id = req.body.id
 
     let databaseArray = []
-    databaseArray = await readFromFile(filePath)
+    databaseArray = await fileOperations.readFromFile(filePath)
     const updatedDatabaseArray = databaseArray.filter(user => user.id !== id);
     const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
         try {
@@ -237,7 +205,7 @@ const addLog = async(request, reply) => {
     const {email, role, name, action } = request.body
     const date = getTime()
     const logData = role + " " + email + " "+ action + " " + name + " data at " + date
-    writeToFile(logData,'./database/logs.json')
+    fileOperations.writeToFile(logData,'./database/logs.json')
 
 }
 module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser,downloadUsers, addLog,createCustomer}
