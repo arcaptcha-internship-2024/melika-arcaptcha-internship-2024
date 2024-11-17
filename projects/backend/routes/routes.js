@@ -1,5 +1,4 @@
 const {saveUserData,
-       downloadUsers,
        addLog, 
        createCustomer, 
        login, 
@@ -7,6 +6,7 @@ const {saveUserData,
        getUsers, 
        updateUser, 
        deleteUser} = require('../controllers/operations')
+const {downloadUsers} = require('../controllers/fileOperations')
 
 
 function routes(fastify,options,done){

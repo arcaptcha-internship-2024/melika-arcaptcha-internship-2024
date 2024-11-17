@@ -30,8 +30,26 @@ async function writeToFile(userData, filePath) {
     return dataArrString;
 }
 
+const downloadUsers = async (request,reply) => {
+    const fs = require('fs');
+    try {
+        const filePath = request.headers['x-file-path']
+
+        if (fs.existsSync(filePath)) {
+            reply.header('Content-Disposition', 'attachment; filename="customers.json"');
+            reply.header('Content-Type', 'application/json');
+            return reply.send(fs.createReadStream(filePath));
+        } else {
+            reply.code(404).send({ error: 'File not found' });
+        }
+    } catch (error) {
+        request.log.error(error);
+        reply.code(500).send({ error: 'Internal Server Error' });
+    }
+}
 
 module.exports = {
     readFromFile,
     writeToFile,
+    downloadUsers
 };

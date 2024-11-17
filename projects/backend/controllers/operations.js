@@ -183,23 +183,6 @@ const deleteUser = async(req,res) => {
 
 }
 
-const downloadUsers = async (request,reply) => {
-    const fs = require('fs');
-    try {
-        const filePath = request.headers['x-file-path']
-
-        if (fs.existsSync(filePath)) {
-            reply.header('Content-Disposition', 'attachment; filename="customers.json"');
-            reply.header('Content-Type', 'application/json');
-            return reply.send(fs.createReadStream(filePath));
-        } else {
-            reply.code(404).send({ error: 'File not found' });
-        }
-    } catch (error) {
-        request.log.error(error);
-        reply.code(500).send({ error: 'Internal Server Error' });
-    }
-}
 
 const addLog = async(request, reply) => {
     const {email, role, name, action } = request.body
@@ -208,4 +191,4 @@ const addLog = async(request, reply) => {
     fileOperations.writeToFile(logData,'./database/logs.json')
 
 }
-module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser,downloadUsers, addLog,createCustomer}
+module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser, addLog,createCustomer}
