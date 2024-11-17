@@ -36,21 +36,6 @@ function getTime(){
 }
 
 
-async function isCaptchaValid(captcha_token){
-    const captcha_api = process.env.CAPTCHA_API;
-    try {
-        const result = await axios.post(captcha_api, {
-            challenge_id: captcha_token,
-            site_key: process.env.SITE_KEY,
-            secret_key: process.env.SECRET_KEY,
-        })
-        return result.data.success
-    } catch (error) {
-        return false
-    }
-}
-
-
 async function readFromFile(filePath){
     let databaseArray = []
     try {
@@ -86,27 +71,21 @@ async function verifyUser(userData) {
 
 const saveUserData = async(req,res) => {
     const { v4: uuidv4 } = require('uuid'); 
-    const {'arcaptcha-token':arcaptcha_token} = req.body
-    const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
     const filePath = './database/customers.json'
     const uniqueId = uuidv4()
     const createdDate = getTime()
     const { 'arcaptcha-token': _, ...customerData } = req.body;
-    if (isArcaptchaValid) {
-        const userData = {
-            id: uniqueId,
-            ...customerData,
-            createdDate: createdDate,
-            lastUpdate: createdDate,
-            status: 'pending',
-            supervisorExplanation: ''
-        }
-        writeToFile(userData,filePath)
-        res.send({success: true, message: 'Your form successfully submited!'})
-    } else {
-        res.send({success: false, message:'Verify You Are Human'})
-        console.log('form submission failed')
+    const userData = {
+        id: uniqueId,
+        ...customerData,
+        createdDate: createdDate,
+        lastUpdate: createdDate,
+        status: 'pending',
+        supervisorExplanation: ''
     }
+    writeToFile(userData,filePath)
+    res.send({success: true, message: 'Your form successfully submited!'})
+    
 }
 
 const createCustomer = async(req,res) => {
@@ -133,28 +112,24 @@ const createCustomer = async(req,res) => {
 }
 
 const login = async (fastify, req, res) => {
-    const {email, password,'arcaptcha-token':arcaptcha_token } = req.body
-    const isArcaptchaValid = await isCaptchaValid(arcaptcha_token)
-    if(isArcaptchaValid){
-        const userData = {
-            email,
-            password
-        }
-        const result = await verifyUser(userData)
-        if(result.success){
-            const token = fastify.jwt.sign({email: email, role: result.userRole}, { expiresIn: '1h' });
-            res.send({
-                success: true,
-                message: result.message,
-                jwtToken: token
-            })
-        }
-        else{
-            res.send(result)
-        }
-    }else{
-        res.send({success: false, message:'Verify You are a Human!'})
+    const {email, password} = req.body    
+    const userData = {
+        email,
+        password
     }
+    const result = await verifyUser(userData)
+    if(result.success){
+        const token = fastify.jwt.sign({email: email, role: result.userRole}, { expiresIn: '1h' });
+        res.send({
+            success: true,
+            message: result.message,
+            jwtToken: token
+        })
+    }
+    else{
+        res.send(result)
+    }
+    
 }
 
 
