@@ -99,7 +99,6 @@ export default {
                 return matchesName && matchesPhoneNumber && matchesStatus;
             });
         });
-
         return {users, role, downloadUsers, filters, handleUpdateFilters, filteredUsers}
     }
 }
