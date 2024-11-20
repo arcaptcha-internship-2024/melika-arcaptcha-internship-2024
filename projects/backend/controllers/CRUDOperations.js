@@ -6,7 +6,7 @@ async function createDBConnection() {
         host: "localhost",
         user: "postgres",
         port: 5432,
-        password: "thisisKamelika13",
+        password: process.env.DATABASE_PASSWORD,
         database: "arcaptchaInternshipProject",
     })
     return myDatabase
@@ -27,6 +27,7 @@ async function read(table){
         await myDatabase.end();
     }
 }
+
 
 async function update(table, userData) {
     const myDatabase = await createDBConnection()
@@ -86,6 +87,7 @@ async function update(table, userData) {
         await myDatabase.end();
     }
 }
+
 
 async function write(userData, filePath) {
     console.log('this is user data: ',userData)
@@ -158,6 +160,7 @@ async function write(userData, filePath) {
 
 }
 
+
 const downloadUsers = async (request,reply) => {
     const fs = require('fs');
     try {
@@ -175,7 +178,6 @@ const downloadUsers = async (request,reply) => {
         reply.code(500).send({ error: 'Internal Server Error' });
     }
 }
-
 
 
 module.exports = {
