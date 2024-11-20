@@ -1,19 +1,20 @@
 <template>
-  <nav class="nav-container">
-    <router-link>
-      <button class="register-button">View Logs</button>
-    </router-link>
-    <router-link>
-      <button class="logout-button">Log Out</button>
-    </router-link>
-  </nav>
-  <div class="create">
-    <router-link class="no-style" :to="{name: 'create'}">
-      <button class="create-button">Create</button> 
-    </router-link>
-  </div>
   <div>
-    <UserCardList :path="usersPath" :isSalesManager="false" :role="role"/>
+    <nav class="nav-container">
+      <router-link :to="{name: 'Logs'}">
+        <button class="register-button">View Logs</button>
+      </router-link>
+        <button class="my-logout" @click="logout">Log Out</button>
+    </nav>
+    <div class="create">
+      <router-link class="no-style" :to="{name: 'create'}">
+        <button class="create-button">Create</button> 
+      </router-link>
+    </div>
+    <div>
+      <UserCardList :path="usersPath" :isSalesManager="false" :role="role"/>
+    </div>
+
   </div>
 </template>
 
@@ -26,12 +27,16 @@ export default {
   setup(){
     const role = ref('sales_manager')
     const showUsers = ref(false)
-    const usersPath = ref('http://localhost:3000/api/users/get')
+    const usersPath = ref('customers')
     const toggle = () => {
       showUsers.value = !showUsers.value
     }
     
-    return{toggle,showUsers, usersPath, role}
+    const logout = () => {
+      localStorage.removeItem('jwtToken')
+      router.push('/login')
+    }
+    return{toggle,showUsers, usersPath, role,logout}
   }
 }
 </script>
