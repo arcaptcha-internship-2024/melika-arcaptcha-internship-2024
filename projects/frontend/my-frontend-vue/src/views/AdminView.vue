@@ -38,8 +38,8 @@ export default {
     const role = ref('admin')
     const showSalesManagers = ref(false)
     const showUsers = ref(false)
-    const salesManagersPath = ref('./database/users.json')
-    const usersPath = ref('./database/customers.json')
+    const salesManagersPath = ref('users')
+    const usersPath = ref('customers')
     const router = useRouter();
 
     const toggle = (showList) => {

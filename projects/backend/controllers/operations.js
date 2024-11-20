@@ -2,7 +2,8 @@
 const fs = require('fs').promises
 const axios = require('axios');
 const { stat } = require('fs');
-const fileOperations = require('./fileOperations');
+const fileOperations = require('./CRUDOperations');
+const fastify = require('fastify');
 
 
 function getTime(){
@@ -19,10 +20,8 @@ function getTime(){
 
 
 async function verifyUser(userData) {
-    const filePath = './database/users.json'
-    const databaseArray = await fileOperations.readFromFile(filePath)
+    const databaseArray = await fileOperations.read(process.env.USERS_DATABASE)
     let result = {success: false, message: `Wrong Username or Password!`, userRole:''}
-
     for(const user of databaseArray){
         if(user.email === userData.email){
             if(user.password === userData.password){
@@ -39,7 +38,7 @@ async function verifyUser(userData) {
 
 const saveUserData = async(req,res) => {
     const { v4: uuidv4 } = require('uuid'); 
-    const filePath = './database/customers.json'
+    const filePath = process.env.CUSTOMERS_DATABASE
     const uniqueId = uuidv4()
     const createdDate = getTime()
     const { 'arcaptcha-token': _, ...customerData } = req.body;
@@ -51,15 +50,15 @@ const saveUserData = async(req,res) => {
         status: 'pending',
         supervisorExplanation: ''
     }
-    fileOperations.writeToFile(userData,filePath)
-    res.send({success: true, message: 'Your form successfully submited!'})
-    
+    fileOperations.write(userData,filePath)
+    res.send({success: true, message: 'Your form successfully submited!'})   
 }
+
 
 const createCustomer = async(req,res) => {
     const { v4: uuidv4 } = require('uuid'); 
     
-    const filePath = './database/customers.json'
+    const filePath = process.env.CUSTOMERS_DATABASE
     const uniqueId = uuidv4()
     const createdDate = getTime()
     const { role, email, action, id, ...customerData } = req.body;
@@ -73,11 +72,12 @@ const createCustomer = async(req,res) => {
         status: 'pending',
         supervisorExplanation: ''
     }
-    fileOperations.writeToFile(userData,filePath)
+    fileOperations.write(userData,filePath)
     const logData = role + " " + email + " "+ action + " " + name + " data at " + createdDate
-    fileOperations.writeToFile(logData,'./database/logs.json')
+    fileOperations.write(logData,process.env.LOGS_DATABASE)
     res.send({success: true, message: 'Your form successfully submited!'})
 }
+
 
 const login = async (fastify, req, res) => {
     const {email, password} = req.body    
@@ -97,7 +97,6 @@ const login = async (fastify, req, res) => {
     else{
         res.send(result)
     }
-    
 }
 
 
@@ -112,83 +111,118 @@ const registerUser = async (fastify, req, res) => {
         password,
         role:newUserRole
     }
-    const path = './database/users.json'
-    fileOperations.writeToFile(userData,path)
+    const path = process.env.USERS_DATABASE
+    fileOperations.write(userData,path)
     const date = getTime()
     const logData = role + " " + tokenEmail + " "+ action + " " + newUserRole + " " + email + " data at " + date
-    fileOperations.writeToFile(logData,'./database/logs.json')
+    fileOperations.write(logData,process.env.LOGS_DATABASE)
     res.send({success: true, message: 'User successfully registered!'})
 }
 
+
 const getUsers = async(req,res) => {
     const path = req.headers['x-file-path']
-    const users = await fileOperations.readFromFile(path)
+    const users = await fileOperations.read(path)
     res.send(users)
 }
+
 
 const updateUser = async(req,res) => {
     const id = req.body.id
     console.log(req.body)
     const password = req.body.password
     
-    const {name, companyName, jobPosition, phoneNumber, explanation, role ,status, email, action,supervisorExplanation} = req.body
+    const {name, companyName, jobPosition, phoneNumber, explanation,createdDate, role ,status, email, action,supervisorExplanation} = req.body
     const date = getTime()
+    const userData = {
+        id: id,
+        name: name,
+        companyName: companyName,
+        jobPosition: jobPosition,
+        phoneNumber: phoneNumber,
+        explanation: explanation,
+        createdDate: createdDate,
+        lastUpdate: date,
+        status: status, 
+        supervisorExplanation: supervisorExplanation
+    }
+   
     let logData = role + " " + email + " "+ action + " " + name + " data at " + date
-    let databaseArray = []
-    let filePath = './database/customers.json'
+    // let filePath = process.env.CUSTOMERS_DATABASE
     if(password){
-        filePath = './database/users.json'
+        filePath = process.env.USERS_DATABASE
         logData = role + " " + email[1] + " "+ action + " " + email[0] + " data at " + date
-    }
-    databaseArray = await fileOperations.readFromFile(filePath)
-    updatedDatabaseArray = databaseArray.map(user => {
-        if(user.id === id){
-            if(password){
-                return{...user, email:email[0], password, role:status}
-
-            }
-            return{...user, name, companyName, jobPosition, phoneNumber, explanation, status, supervisorExplanation, lastUpdate:date}
-        }else{
-            return user
+        const userData1 = {
+            id:id,
+            email: email[0],
+            password: password,
+            role: status
         }
-    })
-    
-    const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
-    try {
-        await fs.writeFile(filePath,dataArrString)
-        console.log('file successfully written!')
-    } catch (err) {
-        console.log(err)
+        console.log('boooooooo')
+        if(fileOperations.update(filePath,userData1)){
+            res.send({success:true, message:'user successfully updated!'})
+        }
+    }else{
+        if(fileOperations.update('customers',userData)){
+            res.send({success:true, message:'user successfully updated!'})
+        }
     }
-    res.send({success:true, message:'user successfully updated!'})
-    fileOperations.writeToFile(logData,'./database/logs.json')
+   
+    
+    // const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
+    // try {
+    //     await fs.writeFile(filePath,dataArrString)
+    //     console.log('file successfully written')
+    // } catch (err) {
+    //     console.log(err)
+    // }
+    // res.send({success:true, message:'user successfully updated!'})
+    fileOperations.write(logData,process.env.LOGS_DATABASE)
 }
+
 
 const deleteUser = async(req,res) => {
     const filePath = req.headers['x-file-path']
-
     const id = req.body.id
+    console.log('this is the request: ', req.body)
 
-    let databaseArray = []
-    databaseArray = await fileOperations.readFromFile(filePath)
-    const updatedDatabaseArray = databaseArray.filter(user => user.id !== id);
-    const dataArrString = JSON.stringify(updatedDatabaseArray,null,2)
-        try {
-            await fs.writeFile(filePath,dataArrString)
-            console.log('file successfully written!')
-        } catch (err) {
-            console.log(err)
+    const {Client} = require('pg')
+
+    const myDatabase = new Client({
+        host: "localhost",
+        user: "postgres",
+        port: 5432,
+        password: "thisisKamelika13",
+        database: "arcaptchaInternshipProject",
+    })
+    
+    try {
+        await myDatabase.connect();
+        const query = `DELETE FROM ${filePath} WHERE id = $1`;
+        const values = [id];
+
+        const result = await myDatabase.query(query, values);
+        if (result.rowCount > 0) {
+           res.send({message:`User with ID ${id} deleted successfully.`, success: true});
+        } else {
+            res.send({message:`No user found with ID ${id}.`,success: false});
         }
-        res.send({success:true, message:'user Successfully deleted!'})
+
+    } catch (err) {
+        res.send({message:`Database query error:`,success: false});
+        throw err;
+    }
 
 }
 
 
 const addLog = async(request, reply) => {
+    console.log('addLog')
     const {email, role, name, action } = request.body
     const date = getTime()
     const logData = role + " " + email + " "+ action + " " + name + " data at " + date
-    fileOperations.writeToFile(logData,'./database/logs.json')
-
+    fileOperations.write(logData,process.env.LOGS_DATABASE)
 }
+
+
 module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser, addLog,createCustomer}

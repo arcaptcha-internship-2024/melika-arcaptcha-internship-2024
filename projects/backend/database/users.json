@@ -3,7 +3,7 @@
     "id": "1",
     "email": "javaddd@j.comm",
     "password": "11ljffsdaf",
-    "role": "sales_manager"
+    "role": "admin"
   },
   {
     "id": "2",
@@ -24,9 +24,9 @@
     "role": "sales_manager"
   },
   {
-    "id": "e681919b-cd25-4fb2-a4c4-9f5f79e5fcb0",
-    "email": "ghazal@g.c",
-    "password": "hihihihijihskd",
+    "id": "47455cb1-fffd-42b7-a9dd-f9dff5ea236a",
+    "email": "sana@gmail.com",
+    "password": "hihihihi",
     "role": "admin"
   }
 ]

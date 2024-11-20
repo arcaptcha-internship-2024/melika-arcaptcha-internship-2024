@@ -20,11 +20,10 @@ export default {
             headers: {
             'Content-type': 'application/x-www-form-urlencoded',
             'Authorization': `Bearer ${jwtToken}`,
-            'x-file-path':'./database/logs.json'
+            'x-file-path':'logs'
             }
         }).then(response => response.json()).then(
             data => {
-                console.log(data,"aA!!!!!!!!!!!!!!")
                 logs.value = data
                 length.value = logs.value.length
             }

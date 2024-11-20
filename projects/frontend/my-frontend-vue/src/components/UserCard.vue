@@ -25,69 +25,67 @@ import {jwtDecode} from 'jwt-decode'
 export default {
     props:['user', 'role'],
     setup(props){
-        const deleteAccess = ref(false)
-        if(props.role === 'admin'){
-            deleteAccess.value = true
-        }
-        const filePath = ref('./database/customers.json')
-        if(props.user.email){
-          filePath.value = './database/users.json'
-        }
-        const deleteUser = async()=>{
-          const jwtToken = localStorage.getItem('jwtToken');
-          console.log(JSON.stringify({ id: props.user.id }))
-          let filePath = './database/customers.json'
-          addLogs('delete')
-          if(props.user.email){
-            filePath = './database/users.json'
-          }
-          fetch('http://localhost:3000/api/user/delete',{
-            method: "DELETE",
-            headers: {
-            'Content-Type': 'application/json', // Send as JSON
-            'Authorization': `Bearer ${jwtToken}`, 
-            'x-file-path': filePath// Include token for authentication
-          },
-          body: JSON.stringify({ id: props.user.id }),
-          }).then(response => response.json()).then(
-            data => {
-              if (data.success){
-                alert(data.message)
-                window.location.reload();
-                
-              }else{
-                alert(data.message)
-                reset()
-              }
-            }
-          )
-        }
-
-        const addLogs = async(action) =>{
-          const jwtToken = localStorage.getItem('jwtToken');
-          const decodedToken = jwtDecode(jwtToken);
-          const role = decodedToken.role
-          const email = decodedToken.email
-    
-          let name = props.user.name
-          if(props.user.email){
-            name = props.user.email
-          }
-          // const action = "read"
-
-          fetch("http://localhost:3000/api/logs/add", {
-          method: "POST",
+      const deleteAccess = ref(false)
+      if(props.role === 'admin'){
+          deleteAccess.value = true
+      }
+      const filePath = ref('customers')
+      if(props.user.email){
+        filePath.value = 'users'
+      }
+      const deleteUser = async()=>{
+        const jwtToken = localStorage.getItem('jwtToken');
+        let tableName = filePath.value
+        console.log('hi:', props.user.id,'tableName : ',tableName)
+        addLogs('delete')
+        
+        fetch('http://localhost:3000/api/user/delete',{
+          method: "DELETE",
           headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${jwtToken}`,
-          },
-          body: JSON.stringify({ email, role, name, action }),
-        }); 
+          'Content-Type': 'application/json', // Send as JSON
+          'Authorization': `Bearer ${jwtToken}`, 
+          'x-file-path': tableName// Include token for authentication
+        },
+        body: JSON.stringify({ id: props.user.id }),
+        }).then(response => response.json()).then(
+          data => {
+            if (data.success){
+              alert(data.message)
+              window.location.reload();
+              
+            }else{
+              alert(data.message)
+              window.location.reload();
+            }
+          }
+        )
+      }
 
-
+      const addLogs = async(action) =>{
+        const jwtToken = localStorage.getItem('jwtToken');
+        const decodedToken = jwtDecode(jwtToken);
+        const role = decodedToken.role
+        const email = decodedToken.email
+  
+        let name = props.user.name
+        if(props.user.email){
+          name = props.user.email
         }
-        return {deleteAccess, deleteUser, addLogs, filePath}
-    }
+        // const action = "read"
+
+        fetch("http://localhost:3000/api/logs/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${jwtToken}`,
+        },
+        body: JSON.stringify({ email, role, name, action }),
+      }); 
+
+
+      }
+      return {deleteAccess, deleteUser, addLogs, filePath}
+  }
 }
 </script>
 

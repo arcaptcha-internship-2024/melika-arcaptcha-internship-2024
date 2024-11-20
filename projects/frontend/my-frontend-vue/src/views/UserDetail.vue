@@ -30,7 +30,7 @@ export default {
         const isDisabled = ref(false)
         let headerContent = "Update Info"
         const isCustomer = ref(true)
-        if(props.filePath === './database/users.json'){
+        if(props.filePath === 'users'){
             isCustomer.value = false
         }
         if(props.action === 'read'){

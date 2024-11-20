@@ -44,7 +44,6 @@ export default {
             }
         }).then(response => response.json()).then(
             data => {
-                console.log("heyyyy",data)
                 users.value = data
                 length.value = users.value.length
             }
@@ -54,11 +53,10 @@ export default {
         }else{
             role.value = 'sales_manager'
         }
-
         const downloadUsers = async () => {
-            let listPath = './database/customers.json'
+            let listPath = 'customers'
             if(props.isSalesManager){
-                listPath = './database/users.json'
+                listPath = 'users'
             }
             fetch('http://localhost:3000/api/users/download',{
                 method:"GET",
@@ -101,7 +99,6 @@ export default {
                 return matchesName && matchesPhoneNumber && matchesStatus;
             });
         });
-        // console.log('this is filtered users:',filteredUsers)
 
         return {users, role, downloadUsers, filters, handleUpdateFilters, filteredUsers}
     }
