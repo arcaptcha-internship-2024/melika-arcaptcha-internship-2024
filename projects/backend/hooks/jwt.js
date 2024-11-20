@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = (fastify) => {
 	fastify.addHook("preHandler", async (req, res) => {
-		if (req.url != "/api/login" && req.url != "/api/customer/submit") {
+		if (req.url !== "/api/login" && req.url !== "/api/customer/submit") {
 			await req.jwtVerify()
 				.then((data) => {
 					req.userData = data;
