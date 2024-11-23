@@ -1,5 +1,15 @@
 version: '3'
 services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: thisisKamelika13
+      POSTGRES_USER: postgres
+    ports:
+      - "4444:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
   my-form:
     build: ./frontend/my-frontend-vue
     ports:
@@ -9,7 +19,7 @@ services:
     volumes:
       # Mount custom Nginx config
       - ./frontend/my-frontend-vue/nginx.conf:/etc/nginx/conf.d/default.conf
-      
+
   my-server:
     build: ./backend
     env_file:
@@ -20,3 +30,13 @@ services:
       - ./backend/database/logs.json:/app/database/logs.json
     ports:
       - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db # Use service name for networking
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: thisisKamelika13
+
+volumes:
+  db_data:
