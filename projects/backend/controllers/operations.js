@@ -4,7 +4,7 @@ const axios = require('axios');
 const { stat } = require('fs');
 const fileOperations = require('./CRUDOperations');
 const fastify = require('fastify');
-
+const myDatabase = require('../database/database.js')
 
 function getTime(){
     let date_time = new Date();
@@ -185,16 +185,6 @@ const deleteUser = async(req,res) => {
     const filePath = req.headers['x-file-path']
     const id = req.body.id
     console.log('this is the request: ', req.body)
-
-    const {Client} = require('pg')
-
-    const myDatabase = new Client({
-        host: "localhost",
-        user: "postgres",
-        port: 5432,
-        password: "thisisKamelika13",
-        database: "arcaptchaInternshipProject",
-    })
     
     try {
         await myDatabase.connect();
