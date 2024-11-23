@@ -167,9 +167,9 @@ const createTable = async () => {
         console.log('trying to connect to database')
         // await myDatabase.connect();
         console.log('connected!')
-        await myDatabase.query(`DROP TABLE IF EXISTS users`)
-        await myDatabase.query(`DROP TABLE IF EXISTS customers`)
-        await myDatabase.query(`DROP TABLE IF EXISTS logs`)
+        // await myDatabase.query(`DROP TABLE IF EXISTS users`)
+        // await myDatabase.query(`DROP TABLE IF EXISTS customers`)
+        // await myDatabase.query(`DROP TABLE IF EXISTS logs`)
 
 
         await myDatabase.query('CREATE TABLE IF NOT EXISTS users ("id" text PRIMARY KEY, "email" text, "password" text, "role" text)')
