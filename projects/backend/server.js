@@ -5,7 +5,7 @@ const fastify = require('fastify')({
     logger:true,
     bodyLimit: 100000
 });
-
+const { createTable } = require('./controllers/CRUDOperations.js');
 const { env } = require('process');
 fastify.register(require('./routes/routes'))
 // fastify.register(require('@fastify/static'), {
@@ -26,7 +26,12 @@ fastify.register(require('@fastify/jwt'), {
 
 const start = async () => {
     try {
+      console.log('initializing database...')
+      await createTable();
+      console.log('')
+
       await fastify.listen({port: 3000,  host:'0.0.0.0'})
+      
     } catch (err) {
       fastify.log.error(err)
       process.exit(1)
