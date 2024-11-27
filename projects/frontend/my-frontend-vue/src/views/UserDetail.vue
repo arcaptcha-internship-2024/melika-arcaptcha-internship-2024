@@ -1,7 +1,7 @@
 <template>
     <div v-if="action === 'read'">
         <div class="update-form" v-if="isFetched && isCustomer" >
-            <MyForm :formFields="formFields" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo" :status="status"/>
+            <MyForm :formFields="formFields" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo" :status="status" :allowComment="true"/>
         </div>
         <div class="update-form" v-if="isFetched && !isCustomer">
             <UserForm :headerContent="'Read'" :foundUser="user" :multiRole="true" :isDisabled="true"/>
@@ -9,7 +9,7 @@
     </div>
     <div v-else>
         <div class="update-form" v-if="isFetched && isCustomer">
-            <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo" :status="status"/>
+            <MyForm :formFields="formFields" :buttonContent="buttonContent" :headerContent="headerContent" :multiRole="multiRole" :id="user.id" :selectInfo="selectInfo" :status="status" :allowComment="true" :mode="'update'"/>
         </div>
         <div class="update-form" v-if="isFetched && !isCustomer">
             <UserForm :buttonContent="'Save'" :headerContent="'Update'" :foundUser="user" :multiRole="true" :isDisabled="false" :id="user.id"/>
@@ -21,10 +21,10 @@
 import { ref } from 'vue'
 import MyForm from '../components/MyForm.vue'
 import UserForm from '../components/UserForm.vue'
-
+import Comment from '../components/Comment.vue'
 export default {
     props:['id','action','filePath'],
-    components:{MyForm, UserForm},
+    components:{MyForm, UserForm, Comment},
     setup(props){
         const isFetched = ref(false)
         const isDisabled = ref(false)
@@ -46,7 +46,6 @@ export default {
             { id: "createdDate", type: "text", rows: "", placeholder: "Created Date", label: "Created Date: ", isRequired: true, fieldType: "input", value: "",isDisabled:isDisabled },
             { id: "lastUpdate", type: "text", rows: "", placeholder: "Last update", label: "Last Update: ", isRequired: true, fieldType: "input", value: "",isDisabled:isDisabled },
             { id: "explanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Customer Explanation: ", isRequired: true, fieldType: "textarea", value: "",isDisabled:isDisabled },
-            { id: "supervisorExplanation", type: "", rows: "4", placeholder: "Provide a short explanation", label: "Supervisor Explanation: ", isRequired: true, fieldType: "textarea", value: "",isDisabled:isDisabled },
             
         ]);
         const buttonContent = "Save"

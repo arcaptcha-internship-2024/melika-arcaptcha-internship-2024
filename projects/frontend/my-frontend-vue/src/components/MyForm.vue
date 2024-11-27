@@ -10,6 +10,14 @@
     <div v-for="formField in formFields" :key="formField.id" class="form-field">
       <InputGroup :id="formField.id" :type="formField.type" :rows="formField.rows" :placeholder="formField.placeholder" :label="formField.label" :isRequired="formField.isRequired" :fieldType="formField.fieldType" :value="formField.value" :isDisabled="formField.isDisabled"/>
     </div>
+    <div v-if="allowComment">
+      <Comment :id="id"/>
+      <div v-if="mode==='update'">
+        <textarea v-model="newComment" id="comment" rows="4"></textarea>
+        <button class="comment-button" @click="sendComment()">Send</button>
+      </div>
+      
+    </div>
     <div v-if="isCaptchaRequired">
       <arcaptchaVue3 :callback="callbackDef" :expired_callback="expired_callbackDef" site_key="qh7aotm3n8" ref="widget"></arcaptchaVue3>
     </div>
@@ -24,6 +32,7 @@
 import arcaptchaVue3, { methods } from 'arcaptcha-vue3';
 import {ref, watch} from 'vue'
 import InputGroup from './InputGroup.vue'
+import Comment from './Comment.vue'
 import { useRouter } from 'vue-router';
 import {jwtDecode} from 'jwt-decode'
 
@@ -32,13 +41,15 @@ export default {
   components: {
     InputGroup,
     arcaptchaVue3,
+    Comment
   },
-  props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo','id','status', 'isCaptchaRequired'],
+  props:['formFields', 'buttonContent', 'headerContent', 'multiRole','selectInfo','id','status', 'isCaptchaRequired','allowComment','mode'],
   setup(props){
     const widget = ref(null)
     const role = ref('default')
     const router = useRouter();
-    
+    const newComment = ref("")
+
     if(props.status){
       role.value = props.status.toLowerCase()
     }
@@ -46,6 +57,32 @@ export default {
       if (widget.value) {
         widget.value.reset();
       }
+    }
+    const sendComment = async () => {
+        const jwtToken = localStorage.getItem('jwtToken');
+        const decodedToken = jwtDecode(jwtToken);
+        const email = decodedToken.email
+        const comment = newComment.value
+        const id = props.id
+
+        console.log()
+        fetch("http://localhost:3000/api/comment/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${jwtToken}`,
+        },
+        body: JSON.stringify({ email, comment, id}),
+      }).then(response => response.json().then(
+        data => {
+          if(data.success){
+            alert(data.message)
+            console.log('reset!')
+            reset()
+            console.log('reset!!!')
+          }
+        }
+      ))
     }
     const handleSubmit = async () => {
       const form = document.querySelector('form')
@@ -208,10 +245,11 @@ export default {
       }
       
     }
-    return{handleSubmit, widget, role}
+    return{handleSubmit, widget, role, newComment,sendComment}
   },
   methods: {
     reset(){
+      console.log('successfully here!')
       this.$refs.widget.reset();
     }
   }
@@ -252,6 +290,10 @@ button:hover {
 }
 .form-field{
   width: 100%;
+}
+.comment-button{
+  width: 25%;
+  margin-bottom: 5px;
 }
 </style>
 
