@@ -2,16 +2,7 @@ const fs = require('fs').promises;
 const { create } = require('domain');
 const {Client} = require('pg')
 const myDatabase = require('../database/database.js');
-const { table } = require('console');
-
-async function createDBConnection() {
-    const myDatabase = new Client({
-        host: "localhost",
-        user: "postgres",
-        password: process.env.DATABASE_PASSWORD  
-    })
-    return myDatabase
-}
+const { user } = require('pg/lib/defaults.js');
 
 
 async function read(table){
@@ -19,6 +10,24 @@ async function read(table){
     try {
         // await myDatabase.connect();
         const res = await myDatabase.query(`SELECT * FROM ${table}`);
+        databaseArray = res.rows;
+        return databaseArray;
+    } catch (err) {
+        console.error('Database query error:', err.message);
+        throw err;
+    } finally {
+        // await myDatabase.end();
+    }
+}
+
+async function readById(table,id){
+    
+    // const myDatabase = await createDBConnection()
+    console.log('this is postId,', id)
+    try {
+        // await myDatabase.connect();
+        const query = `SELECT * FROM ${table} WHERE "customerId" = $1`
+        const res = await myDatabase.query(query,[id]);
         databaseArray = res.rows;
         return databaseArray;
     } catch (err) {
@@ -130,7 +139,7 @@ async function write(userData, filePath) {
             ];
             await myDatabase.query(query, values);
 
-        }else{
+        }else if(filePath === 'logs'){
             const query = `
                 INSERT INTO ${filePath} ("log")
                 VALUES ($1)
@@ -141,6 +150,21 @@ async function write(userData, filePath) {
             
             await myDatabase.query(query, values);
 
+        }
+        else{
+            const query = `
+                INSERT INTO ${filePath} ("commentId","customerId","email","message","date")
+                VALUES ($1,$2,$3,$4,$5)
+            `;
+            const values = [
+                userData.commentId,
+                userData.customerId,
+                userData.email,
+                userData.message,
+                userData.date
+            ];
+            
+            await myDatabase.query(query, values);
         }
 
 
@@ -155,21 +179,14 @@ async function write(userData, filePath) {
 }
 
 const createTable = async () => {
-    // const myDatabase = new Client({
-    //     host: "db", // Use the service name from Docker Compose
-    //     user: "postgres",
-    //     password: "thisisKamelika13",
-    //     database: "postgres", // Default database in PostgreSQL
-    //     port: 5432, // PostgreSQL default port
-    // });
 
     try {
         console.log('trying to connect to database')
         // await myDatabase.connect();
         console.log('connected!')
         // await myDatabase.query(`DROP TABLE IF EXISTS users`)
-        // await myDatabase.query(`DROP TABLE IF EXISTS customers`)
-        // await myDatabase.query(`DROP TABLE IF EXISTS logs`)
+
+
 
 
         await myDatabase.query('CREATE TABLE IF NOT EXISTS users ("id" text PRIMARY KEY, "email" text, "password" text, "role" text)')
@@ -178,6 +195,13 @@ const createTable = async () => {
         console.log('customers database Created!')
         await myDatabase.query('CREATE TABLE IF NOT EXISTS logs ("log" text)')
         console.log('logs database Created!')
+
+        await myDatabase.query('CREATE TABLE IF NOT EXISTS comments ("commentId" text PRIMARY KEY, "customerId" text REFERENCES customers("id") ON DELETE CASCADE ON UPDATE CASCADE, "email" text, "message" text, "date" text)')
+        // await myDatabase.query(`
+        //     INSERT INTO comments ("commentId", "customerId", "email", "message")
+        //     SELECT '1', '2', 'mel@g.c', 'default message!'
+        // `);
+        console.log('comments database Created!')
         await myDatabase.query(`
             INSERT INTO users ("id", "email", "password", "role")
             SELECT '1', 'melika@gmail.com', '12345m', 'admin'
@@ -189,7 +213,6 @@ const createTable = async () => {
         // Retrieve the data to send as the response
         const result = await myDatabase.query('SELECT * FROM users');
         console.log('Data fetched!');
-        reply.send(result.rows)
     } catch (error) {
         console.log('error: ',error)
     }
@@ -225,11 +248,13 @@ const downloadUsers = async (request,reply) => {
 
 
 
+
 module.exports = {
     read,
     write,
     downloadUsers,
     update,
     createTable,
-    getTest
+    getTest,
+    readById
 };
