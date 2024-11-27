@@ -214,5 +214,30 @@ const addLog = async(request, reply) => {
     fileOperations.write(logData,process.env.LOGS_DATABASE)
 }
 
+const sendComment = async(request, reply) => {
+    const { v4: uuidv4 } = require('uuid'); 
 
-module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser, addLog,createCustomer}
+    console.log('this is the body:',request.body)
+    const {email, comment, id} = request.body
+    const commentId = uuidv4()
+    const commentData = {
+        commentId:commentId,
+        customerId: id,
+        email: email,
+        message: comment,
+        date: getTime()
+    }
+    const tableName = "comments"
+    fileOperations.write(commentData,tableName)
+    reply.send({success: true,message:'Comment Sent!'})
+}
+
+
+const getUsersById = async(req,res) => {
+    const {customerId,tableName} = req.body
+    console.log('this is customerId from getUSers by id: ',customerId)
+    const users = await fileOperations.readById(tableName,customerId)
+    res.send(users)
+}
+
+module.exports = {saveUserData,login, registerUser, getUsers, updateUser, deleteUser, addLog,createCustomer, sendComment, getUsersById}
