@@ -3,7 +3,7 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: thisisKamelika13
+      POSTGRES_PASSWORD: DATABASE_PASSWORD
       POSTGRES_USER: postgres
     ports:
       - "4444:5432"
@@ -36,7 +36,7 @@ services:
       DATABASE_HOST: db # Use service name for networking
       DATABASE_PORT: 5432
       DATABASE_USER: postgres
-      DATABASE_PASSWORD: thisisKamelika13
+      DATABASE_PASSWORD: process.env.DATABASE_PASSWORD
 
 volumes:
   db_data:
