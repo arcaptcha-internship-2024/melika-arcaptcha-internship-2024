@@ -5,7 +5,9 @@ const {saveUserData,
        registerUser, 
        getUsers, 
        updateUser, 
-       deleteUser} = require('../controllers/operations')
+       deleteUser,
+       sendComment,
+       getUsersById} = require('../controllers/operations')
 const {downloadUsers} = require('../controllers/CRUDOperations')
 
 
@@ -22,10 +24,14 @@ function routes(fastify,options,done){
     fastify.get('/api/users/get', async (request, reply) => {
         await getUsers(request, reply);
     });
+    fastify.post('/api/comment/getAll', async (request, reply) => {
+        await getUsersById(request, reply);
+    });
     fastify.post('/api/user/update',updateUser)
     fastify.delete('/api/user/delete', deleteUser)
     fastify.get('/api/users/download', downloadUsers);
     fastify.post('/api/logs/add',addLog)
+    fastify.post('/api/comment/add',sendComment)
     fastify.get('/api/logs/get', async (request, reply) => {
         await getUsers(request, reply);
     });
